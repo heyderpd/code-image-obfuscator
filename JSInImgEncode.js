@@ -5,7 +5,7 @@ JSInImgEncode = {
 	Set: function(Data, Canvas){
 		var image = this.Data.Set(Data);
 		if(typeof(Canvas) == 'object')
-			Canvas.replaceWith(image);
+			Canvas.parentNode.replaceChild(image, Canvas);
 		else
 			return image;
 	},
@@ -109,7 +109,8 @@ JSInImgEncode = {
 		},
 		Process: function(Work, Data){
 			var This = this;
-			$.each(Data, function(key, val){
+			Object.keys(Data).forEach( function(key){
+				var val = Data[key];
 				if(typeof(val) != "function")
 					Data.set(key, Work(This, val) );
 			});

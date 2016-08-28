@@ -1,16 +1,24 @@
-$(function(){
-	$('.before').val("function hello(name = 'Mario') {\n    alert('Hello '+name+'!');\n}");
-	var Data = $('.before').val();
+function initialize(){
+	after = document.getElementsByClassName('after')[0];
+	before = document.getElementsByClassName('before')[0];
+	canvas = document.getElementsByTagName('canvas')[0];
 
 	JSInImgEncode.Initialize();
-	Canvas = document.getElementsByTagName('canvas')[0];
-});
-
-function doConvert(){
-	var Data = $('.before').val();
-	JSInImgEncode.Set(Data, $('canvas'));
 }
 
-function doRevert(){
-	$('.after').val( JSInImgEncode.Get() );
+function convert(){
+	data = before.value;
+	JSInImgEncode.Set(data, canvas);
+}
+
+function revert(){
+	after.value = JSInImgEncode.Get();
+}
+
+var after, before, canvas, data;
+
+document.onreadystatechange = function () {
+	if (document.readyState == "complete") {
+		initialize();
+	}
 }

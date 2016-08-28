@@ -24,5 +24,4 @@ function doConvert(){
 function doRevert(){
   $('.after').val( JSInImgEncode.Get() );
 }
-
 ```
