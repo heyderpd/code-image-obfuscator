@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/heyderpd/code-image-obfuscator/issues"
   },
-  "homepage": "https://github.com/heyderpd/code-image-obfuscator#readme"
+  "homepage": "https://github.com/heyderpd/code-image-obfuscator#readme",
+  "dependencies": {
+    "canvas": "^1.4.0"
+  }
 }
