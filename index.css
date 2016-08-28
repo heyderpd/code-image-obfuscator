@@ -1,0 +1,13 @@
+body {
+	display: table-caption;
+}
+
+textarea {
+	width: 20em;	
+}
+
+canvas {
+	width: 20em;
+	height: 20em;
+	background-color: black;
+}
