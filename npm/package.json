@@ -1,7 +1,7 @@
 {
   "name": "code-image-obfuscator",
-  "version": "1.0.0",
-  "description": "coming soon",
+  "version": "1.0.2",
+  "description": "merge data and image png",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -18,5 +18,8 @@
   "homepage": "https://github.com/heyderpd/code-image-obfuscator#readme",
   "dependencies": {
     "canvas": "^1.4.0"
-  }
+  },
+  "keywords": [
+    "png", "image", "merge", "hide", "data", "text", "canvas"
+  ]
 }

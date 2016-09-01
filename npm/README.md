@@ -10,13 +10,16 @@ Attempt to hide a javascript file during transmission.
 * Hide the original data by means of a secret key.
 * DONE! Use a source image and merge changing the least original.
 
+## First Steps
+Install canvas see [npm-canvas](https://www.npmjs.com/package/canvas)
+
 ## Example of use:
 ```javascript
 const fs = require('fs');
 const { convert, revert, save } = require('code-image-obfuscator')
 
 var after, before, canvas;
-
+fdsfsd
 // data before merge with imagem
 before = fs.readFileSync('README.md', 'utf8');
 
