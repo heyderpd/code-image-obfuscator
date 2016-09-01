@@ -1,7 +1,7 @@
 # CODE IMAGE OBFUSCATOR
 
-# Plugin that converts text to image and reverte.
-Please use it responsibly! Do not use it for an illegal purpose.
+## Plugin that converts text to image and reverte.
+## Please use it responsibly! Do not use it for an illegal purpose.
 
 ## Motivation
 Attempt to hide a javascript file during transmission.
@@ -19,7 +19,7 @@ const fs = require('fs');
 const { convert, revert, save } = require('code-image-obfuscator')
 
 var after, before, canvas;
-fdsfsd
+
 // data before merge with imagem
 before = fs.readFileSync('README.md', 'utf8');
 

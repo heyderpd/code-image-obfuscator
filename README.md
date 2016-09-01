@@ -1,7 +1,7 @@
 # CODE IMAGE OBFUSCATOR
 
-# Plugin that converts text to image and reverte.
-Please use it responsibly! Do not use it for an illegal purpose.
+## Plugin that converts text to image and reverte.
+## Please use it responsibly! Do not use it for an illegal purpose.
 
 ## Motivation
 Attempt to hide a javascript file during transmission.

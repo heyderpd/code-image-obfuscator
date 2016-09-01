@@ -1,6 +1,6 @@
 {
   "name": "code-image-obfuscator",
-  "version": "1.0.2",
+  "version": "1.0.4",
   "description": "merge data and image png",
   "main": "index.js",
   "scripts": {
