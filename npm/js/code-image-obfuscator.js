@@ -58,15 +58,13 @@ var Data = {
     }
     Data.Memo = Data.Head +text +Data.Tail;
     Draw.Initialize(config);
-    // [P, P] => [RGB, RGB] => [{999, 99}9] => [FF, FF]
-    if (Data.Merge) { // [P, P] => [RGB, RGB] => [F{F} F{F} F{F}, F{F} F{F} F{F}] => [FF, FF, FF]
+    if (Data.Merge) { // [P, P] <=> [RGB, RGB] <=> [fF fF fF, fF fF fF] <=> [FF, FF, FF]
       var process = function(j) {
         var charHEXlist = '';
         for (var i=0; i<3; i++) {
           var p = j[i];
-          // var charHEX = (Data.Memo[p]) ? MathLib.ToCode(Data.Memo[p]).toString(16) : -1 ;
-          // charHEXlist[charHEXlist.length] = charHEX;
-          charHEXlist += MathLib.ToCode(Data.Memo[p]).toString(16);
+          var HEX = MathLib.ToCode(Data.Memo[p]).toString(16);
+          charHEXlist += (HEX.length > 1) ? HEX : '0'+HEX ;
         }
         var c = j[0] /3 *2;
         var c = [c, c+1];
@@ -75,11 +73,9 @@ var Data = {
           var Pixel = Draw.NextPixel(null, p);
           var RGB = [];
           for (var l=0; l<3; l++) {
-            var Color = Pixel[l].toString(16);
-            var Char = charHEXlist[l+i];
-            // RGB[l] = (Char >0) ? Color[0] +Char : Color ;
-            // RGB[l] = parseInt(RGB[l], 16);
-            RGB[l] = parseInt(Color[0] +Char, 16);
+            var Color = Pixel[l].toString(16)[0];
+            var Char = charHEXlist[l+(i*3)];
+            RGB[l] = parseInt(Color +Char, 16);
           }
           var Color = new Objets.Color(RGB[0], RGB[1], RGB[2]);
           Draw.NextPixel(Color, p);
@@ -89,7 +85,7 @@ var Data = {
       var process = function(j) {
         var C = new Objets.Color(Data.Memo[ j[0] ], Data.Memo[ j[1] ], Data.Memo[ j[2] ]);
         C = MathLib.Process(MathLib.ToCode, C);
-        Draw.NextPixel(C, i);       
+        Draw.NextPixel(C, i);
       };
     }
     var limit = MathLib.RoundUP(Data.Memo.length, 3);    
@@ -106,15 +102,14 @@ var Data = {
         var charHexList = [];
         for (var i=0; i<2; i++) {
           var p = j[i];
+          if (p > 405) return;
           var Pixel = Draw.NextPixel(null, p);
-          var C = new Objets.Color(Pixel[0], Pixel[1], Pixel[2]);
-          charHexList.push([C.r, C.g, C.b]);
+          charHexList.push([ Pixel[0], Pixel[1], Pixel[2] ]);
         }
         var charList = []
         for (var i=0; i<2; i++) {
           for (var l=0; l<3; l++) {
             charList.push(charHexList[i][l].toString(16)[1]);
-            Data.Memo += charHexList[i][l][1];
           }
         }
         for (var i=0; i<3; i++) {
@@ -140,7 +135,7 @@ var Data = {
       process([j, j+1]);
     }
     var Pattern = new RegExp('^([^;]*;)([\\w\\W]*)(;[^;!]*!)([\\w\\W]*)$');
-    var result = null;return Data.Memo;
+    var result = null;
     if ((result = Pattern.exec(Data.Memo)) !== null) {
       if (Data.Head === result[1] && result[3] === Data.Tail) {
         Data.Memo = result[2];
@@ -156,7 +151,7 @@ var Draw = {
   Ctx: null,
   Initialize: function(config) {
     if (config) {
-      if (Data.Memo.length > config.canvas.width *config.canvas.height)
+      if (Data.Memo.length /3 > config.canvas.width *config.canvas.height /2)
         throw new Error("text is too long, this img can't suport this");
       
       Data.Base = config.canvas.width;
