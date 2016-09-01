@@ -66,8 +66,8 @@ var Data = {
           var HEX = MathLib.ToCode(Data.Memo[p]).toString(16);
           charHEXlist += (HEX.length > 1) ? HEX : '0'+HEX ;
         }
-        var c = j[0] /3 *2;
-        var c = [c, c+1];
+        var c = j[0] /3 *6;
+        var c = [c, c+3];
         for (var i=0; i<2; i++) {
           var p = c[i];
           var Pixel = Draw.NextPixel(null, p);
@@ -99,10 +99,12 @@ var Data = {
     Data.Memo = ''
     if (Data.Merge) {
       var process = function(j) {
+        j = j[0] /2 *6;
+        j = [j, j+3];
+
         var charHexList = [];
         for (var i=0; i<2; i++) {
           var p = j[i];
-          if (p > 405) return;
           var Pixel = Draw.NextPixel(null, p);
           charHexList.push([ Pixel[0], Pixel[1], Pixel[2] ]);
         }
@@ -134,7 +136,7 @@ var Data = {
       var j = i *2;
       process([j, j+1]);
     }
-    var Pattern = new RegExp('^([^;]*;)([\\w\\W]*)(;[^;!]*!)([\\w\\W]*)$');
+    var Pattern = new RegExp(`^(${Data.Head})([\\w\\W]*)(${Data.Tail})([\\w\\W]*)$`);
     var result = null;
     if ((result = Pattern.exec(Data.Memo)) !== null) {
       if (Data.Head === result[1] && result[3] === Data.Tail) {
@@ -151,7 +153,7 @@ var Draw = {
   Ctx: null,
   Initialize: function(config) {
     if (config) {
-      if (Data.Memo.length /3 > config.canvas.width *config.canvas.height /2)
+      if (Data.Memo.length /3 > config.canvas.width *config.canvas.height /6)
         throw new Error("text is too long, this img can't suport this");
       
       Data.Base = config.canvas.width;
