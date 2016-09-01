@@ -58,76 +58,86 @@ var Data = {
     }
     Data.Memo = Data.Head +text +Data.Tail;
     Draw.Initialize(config);
-    if (Data.Merge) { // [P, P] => [RGB, RGB] => [{999, 99}9] => [FF, FF]
-      var word = 2;
-      var process = function(i) {
-        var j = i *word;
-        var A = MathLib.ToCode(Data.Memo[j]  ).toString(16);
-        var B = MathLib.ToCode(Data.Memo[j+1]).toString(16);
-        var DEC = String(parseInt(A+B, 16));
-        var decPair = [ DEC.substring(0, 3).split(''), DEC.substring(3, 5).split('') ];
-        var pixelPair = [ Draw.NextPixel(null, j), Draw.NextPixel(null, j+1) ];
-        for (var p=0; p<pixelPair.length; p++) {
-          var Pixel = pixelPair[p];
-          var RGB = [ Pixel[0], Pixel[1], Pixel[2] ];
-          var newRGB = [];
-          for (var c=0; c<RGB.length; c++) {
-            var Color = String(RGB[c]);
-            var N = (decPair[p][c]) ? decPair[p][c] : 0;
-            newRGB[c] = Color.substring(0, Color.length -1) +N;
+    // [P, P] => [RGB, RGB] => [{999, 99}9] => [FF, FF]
+    if (Data.Merge) { // [P, P] => [RGB, RGB] => [F{F} F{F} F{F}, F{F} F{F} F{F}] => [FF, FF, FF]
+      var process = function(j) {
+        var charHEXlist = '';
+        for (var i=0; i<3; i++) {
+          var p = j[i];
+          // var charHEX = (Data.Memo[p]) ? MathLib.ToCode(Data.Memo[p]).toString(16) : -1 ;
+          // charHEXlist[charHEXlist.length] = charHEX;
+          charHEXlist += MathLib.ToCode(Data.Memo[p]).toString(16);
+        }
+        var c = j[0] /3 *2;
+        var c = [c, c+1];
+        for (var i=0; i<2; i++) {
+          var p = c[i];
+          var Pixel = Draw.NextPixel(null, p);
+          var RGB = [];
+          for (var l=0; l<3; l++) {
+            var Color = Pixel[l].toString(16);
+            var Char = charHEXlist[l+i];
+            // RGB[l] = (Char >0) ? Color[0] +Char : Color ;
+            // RGB[l] = parseInt(RGB[l], 16);
+            RGB[l] = parseInt(Color[0] +Char, 16);
           }
-          var C = new Objets.Color(newRGB[0], newRGB[1], newRGB[2]);
-          Draw.NextPixel(C, j +p);
+          var Color = new Objets.Color(RGB[0], RGB[1], RGB[2]);
+          Draw.NextPixel(Color, p);
         }
       };
     } else {
-      var word = 3;
-      var process = function(i) {
-        var j = i *word;
-        var C = new Objets.Color(Data.Memo[j], Data.Memo[j+1], Data.Memo[j+2]);
+      var process = function(j) {
+        var C = new Objets.Color(Data.Memo[ j[0] ], Data.Memo[ j[1] ], Data.Memo[ j[2] ]);
         C = MathLib.Process(MathLib.ToCode, C);
         Draw.NextPixel(C, i);       
       };
     }
-    var limit = MathLib.RoundUP(Data.Memo.length, word);    
+    var limit = MathLib.RoundUP(Data.Memo.length, 3);    
     for (var i=0; i<limit; i++) {
-      process(i);
+      var j = i *3;
+      process([j, j+1, j+2]);
     }
     return Draw.Canvas;
   },
   Get: function() {
     Data.Memo = ''
     if (Data.Merge) {
-      var word = 2;
       var process = function(j) {
-        var pixelPair = [ Draw.NextPixel(null, j), Draw.NextPixel(null, j+1) ];
-        var DEC = '';
-        for (var p=0; p<pixelPair.length; p++) {
-          var Pixel = pixelPair[p];
-          var RGB = [ Pixel[0], Pixel[1], Pixel[2] ];
-          for (var c=0; c<RGB.length; c++) {
-            var Color = String(RGB[c]);
-            DEC += Color.substring(Color.length -1, Color.length);
+        var charHexList = [];
+        for (var i=0; i<2; i++) {
+          var p = j[i];
+          var Pixel = Draw.NextPixel(null, p);
+          var C = new Objets.Color(Pixel[0], Pixel[1], Pixel[2]);
+          charHexList.push([C.r, C.g, C.b]);
+        }
+        var charList = []
+        for (var i=0; i<2; i++) {
+          for (var l=0; l<3; l++) {
+            charList.push(charHexList[i][l].toString(16)[1]);
+            Data.Memo += charHexList[i][l][1];
           }
         }
-        DEC = Number(DEC.substring(0, DEC.length -1));
-        var HEX = DEC.toString(16);
-        var A = MathLib.ToChar(HEX.substring(0, 2));
-        var B = MathLib.ToChar(HEX.substring(2, 4));
-        Data.Memo += A + B;
+        for (var i=0; i<3; i++) {
+          var j = i *2;
+          var char = charList[j] +charList[j+1];
+          Data.Memo += MathLib.ToChar(parseInt(char, 16));
+        }
       };
     } else {
-      var word = 1;
       var process = function(j) {
-        var Pixel = Draw.NextPixel(null, j);
-        var C = new Objets.Color(Pixel[0], Pixel[1], Pixel[2]);
-        C = MathLib.Process(MathLib.ToChar, C);
-        Data.Memo += C.r + C.g + C.b;        
+        for (var i=0; i<2; i++) {
+          var p = j[i];
+          var Pixel = Draw.NextPixel(null, p);
+          var C = new Objets.Color(Pixel[0], Pixel[1], Pixel[2]);
+          C = MathLib.Process(MathLib.ToChar, C);
+          Data.Memo += C.r + C.g + C.b;  
+        }      
       };
     }
-    var limit = MathLib.RoundUP(Draw.Canvas.width *Draw.Canvas.height, word); 
+    var limit = MathLib.RoundUP(Draw.Canvas.width *Draw.Canvas.height, 2);    
     for (var i=0; i<limit; i++) {
-      process(i);
+      var j = i *2;
+      process([j, j+1]);
     }
     var Pattern = new RegExp('^([^;]*;)([\\w\\W]*)(;[^;!]*!)([\\w\\W]*)$');
     var result = null;return Data.Memo;
