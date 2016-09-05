@@ -1,37 +1,36 @@
 
-var setData = function(config) {
-  // config.pathFile
-  // config.text
-  // is png?
+var setData= function(config) {
+  if (config.pathFile  === undefined) { throw 'img-obfuscator: param "pathFile" is undefined' };
+  if (config.text.split('.').pop() === 'txy') { throw 'img-obfuscator: image need to be png' };
+  if (config.text  === undefined) { throw 'img-obfuscator: param "text" is undefined' };
   if (typeof(config.pathFile) === 'string') {
-    // fs.readFileSync(config.pathFile, function(err, photo) {
     var photo = fs.readFileSync(config.pathFile);
-   
+
     var img = new image;
     img.src = photo;
 
-    canvas = new canvas(img.width, img.height)
+    var canvas = new npmCanvas(img.width, img.height)
     var ctx = canvas.getContext('2d');
     ctx.drawImage(img, 0, 0, img.width, img.height);
 
-    Data.Set(config.text, canvas, ctx);
+    Dt.Set(config.text, canvas, ctx);
   } else {
-    Data.Set(config.text, false);
+    Dt.Set(config.text, false);
   }
 }
 
-var getData = function() {
-  return Data.Get();
+var getData= function() {
+  return Dt.Get();
 }
 
 var getCanvas = function() {
-  return Draw.Canvas
+  return Dw.Canvas;
 }
 
 var savePng = function(pathFile) {
   if (typeof(pathFile) === 'string') {
     var out = fs.createWriteStream(pathFile)
-    var stream = canvas.pngStream();
+    var stream = Dw.Canvas.pngStream();
 
     stream.on('data', function(chunk){
       out.write(chunk);
@@ -43,7 +42,16 @@ var savePng = function(pathFile) {
   }
 }
 
-var Data = {
+//config
+var Co = {
+  R: 3, //RGBA
+  C: 3, //CHAR
+  L: 8, //CHAR LEN
+  P: 8  //PIXEL
+}
+
+//Data
+var Dt = {
   Head: '!NPM;',
   Tail: ';code-image-obfuscator!',
   Merge: false,
@@ -51,227 +59,186 @@ var Data = {
   Base: null,
   Set: function(text, canvas, ctx) {
     if (canvas) {
-      Data.Merge = true;
+      Dt.Merge = true;
       var config = {canvas: canvas, ctx: ctx};
     } else {
       var config = false;
     }
-    Data.Memo = Data.Head +text +Data.Tail;
-    Draw.Initialize(config);
-    if (Data.Merge) { // [P, P] <=> [RGB, RGB] <=> [fF fF fF, fF fF fF] <=> [FF, FF, FF]
-      var process = function(j) {
-        var charHEXlist = '';
-        for (var i=0; i<3; i++) {
-          var p = j[i];
-          var HEX = MathLib.ToCode(Data.Memo[p]).toString(16);
-          charHEXlist += (HEX.length > 1) ? HEX : '0'+HEX ;
-        }
-        var c = j[0] /3 *6;
-        var c = [c, c+3];
-        for (var i=0; i<2; i++) {
-          var p = c[i];
-          var Pixel = Draw.NextPixel(null, p);
-          var RGB = [];
-          for (var l=0; l<3; l++) {
-            var Color = Pixel[l].toString(16)[0];
-            var Char = charHEXlist[l+(i*3)];
-            RGB[l] = parseInt(Color +Char, 16);
+    Dt.Memo = Dt.Head +text +Dt.Tail;
+    Dw.Initialize(config);
+    Dw.offset = 0;
+    if (Dt.Merge) {
+      var limit = MLib.Round(Dt.Memo.length, Co.C);
+      for (var i=0; i<limit; i++) {
+        var r = i *Co.C;
+        var STREAM = '';
+        for (var b=0; b<Co.C; b++) {
+          var BIN = MLib.ToCode(Dt.Memo[b +r]).toString(2);
+          while (BIN.length < Co.L){
+            BIN = '0'+BIN;
           }
-          var Color = new Objets.Color(RGB[0], RGB[1], RGB[2]);
-          Draw.NextPixel(Color, p);
+          STREAM += BIN;
         }
-      };
+        for (var j=0; j<Co.P; j++) {
+          var r = j *Co.R;
+          var Pixel = Dw.getOffset();
+          for (var p=0; p<Co.R; p++) {
+            var odd = Pixel[p] %2;
+            var BIT = STREAM[p +r];
+            if (!odd && BIT === '1') {
+              Pixel[p] += 1;
+            } else if (odd && BIT === '0') {
+              Pixel[p] -= 1;
+            }
+          }
+          var Color = [ Pixel[0], Pixel[1], Pixel[2], Pixel[3] ];
+          Dw.setNext(Color);
+        }
+      }
     } else {
-      var process = function(j) {
-        var C = new Objets.Color(Data.Memo[ j[0] ], Data.Memo[ j[1] ], Data.Memo[ j[2] ]);
-        C = MathLib.Process(MathLib.ToCode, C);
-        Draw.NextPixel(C, i);
+      var limit = MLib.Round(Dt.Memo.length, 4);
+      for (var i=0; i<limit; i++) {
+        var j = i *3;
+        var C = [ Dt.Memo[j], Dt.Memo[j+1], Dt.Memo[j+2], Dt.Memo[j+3] ];
+        C = MLib.Process(MLib.ToCode, C);
+        Dw.setArray(C, i);
       };
     }
-    var limit = MathLib.RoundUP(Data.Memo.length, 3);    
-    for (var i=0; i<limit; i++) {
-      var j = i *3;
-      process([j, j+1, j+2]);
-    }
-    return Draw.Canvas;
+    return Dw.Canvas;
   },
   Get: function() {
-    Data.Memo = ''
-    if (Data.Merge) {
-      var process = function(j) {
-        j = j[0] /2 *6;
-        j = [j, j+3];
-
-        var charHexList = [];
-        for (var i=0; i<2; i++) {
-          var p = j[i];
-          var Pixel = Draw.NextPixel(null, p);
-          charHexList.push([ Pixel[0], Pixel[1], Pixel[2] ]);
-        }
-        var charList = []
-        for (var i=0; i<2; i++) {
-          for (var l=0; l<3; l++) {
-            charList.push(charHexList[i][l].toString(16)[1]);
+    Dw.offset = 0;
+    Dt.Memo = '';
+    if (Dt.Merge) {
+      var limit = MLib.Round(Dw.Canvas.width *Dw.Canvas.height, Co.P);
+      for (var i=0; i<limit; i++) {
+        var STREAM = '';
+        for (var j=0; j<Co.P; j++) {
+          var Pixel = Dw.getNext();
+          for (var p=0; p<Co.R; p++) {
+            var Color = Pixel[p];
+            var BIT = String(Pixel[p] %2);
+            STREAM += BIT;
           }
         }
-        for (var i=0; i<3; i++) {
-          var j = i *2;
-          var char = charList[j] +charList[j+1];
-          Data.Memo += MathLib.ToChar(parseInt(char, 16));
+        for (var j=0; j<Co.C; j++) {
+          var r = j *Co.L;
+          BIN = '';
+          for (var k=0; k<Co.L; k++) {
+            BIN += STREAM[k +r];
+          }
+          var DEC = parseInt(BIN, 2);
+          Dt.Memo += MLib.ToChar(DEC);
         }
-      };
+      }
     } else {
-      var process = function(j) {
-        for (var i=0; i<2; i++) {
-          var p = j[i];
-          var Pixel = Draw.NextPixel(null, p);
-          var C = new Objets.Color(Pixel[0], Pixel[1], Pixel[2]);
-          C = MathLib.Process(MathLib.ToChar, C);
-          Data.Memo += C.r + C.g + C.b;  
-        }      
-      };
+      var limit = Dw.Canvas.width *Dw.Canvas.height;
+      for (var i=0; i<limit; i++) {
+        var Pixel = Dw.getNext();
+        var C = [ Pixel[0], Pixel[1], Pixel[2], Pixel[3] ];
+        C = MLib.Process(MLib.ToChar, C);
+        Dt.Memo += C[0] +C[1] +C[2] +C[3];
+      }
     }
-    var limit = MathLib.RoundUP(Draw.Canvas.width *Draw.Canvas.height, 2);    
-    for (var i=0; i<limit; i++) {
-      var j = i *2;
-      process([j, j+1]);
-    }
-    var Pattern = new RegExp(`^(${Data.Head})([\\w\\W]*)(${Data.Tail})([\\w\\W]*)$`);
+    var Pattern = new RegExp(`^(${Dt.Head})([\\w\\W]*)(${Dt.Tail})[\\w\\W]*$`);
     var result = null;
-    if ((result = Pattern.exec(Data.Memo)) !== null) {
-      if (Data.Head === result[1] && result[3] === Data.Tail) {
-        Data.Memo = result[2];
-        return Data.Memo;
+    if ((result = Pattern.exec(Dt.Memo)) !== null) {
+      if (Dt.Head === result[1] && result[3] === Dt.Tail) {
+        Dt.Memo = result[2];
+        return Dt.Memo;
       }
     }
     throw new Error("image don't have hide data");
   }
 }
 
-var Draw = {
+//Draw
+var Dw = {
   Canvas: null,
   Ctx: null,
+  offset: null,
   Initialize: function(config) {
     if (config) {
-      if (Data.Memo.length /3 > config.canvas.width *config.canvas.height /6)
+      if (Dt.Memo.length /Co.C > config.canvas.width *config.canvas.height /Co.P)
         throw new Error("text is too long, this img can't suport this");
-      
-      Data.Base = config.canvas.width;
-      Draw.Canvas = config.canvas;
-      Draw.Ctx = config.ctx;
+      Dt.Base = config.canvas.width;
+      Dw.Canvas = config.canvas;
+      Dw.Ctx = config.ctx;
     } else {
-      var sqrt = Math.sqrt( MathLib.RoundUP(Data.Memo.length, 3) );
-      Data.Base = MathLib.RoundUP(sqrt, 1);
-      if(Data.Base %1)
-        Data.Base += 1;
-      
-      Draw.Canvas = new canvas(Data.Base, Data.Base);
-      Draw.Ctx = Draw.Canvas.getContext('2d');
+      var sqrt = Math.sqrt( MLib.Round(Dt.Memo.length, 3) );
+      Dt.Base = MLib.Round(sqrt, 1);
+      if(Dt.Base %1)
+        Dt.Base += 1;
+
+      Dw.Canvas = new npmCanvas(Dt.Base, Dt.Base);
+      Dw.Ctx = Dw.Canvas.getContext('2d');
     }
   },
-  NextPixel: function(C = null, k) {
-    var P = new Objets.Pos(k %Data.Base, null);
-    P.y = (k -P.x) /Data.Base;
-    if (C !== null)
-      Draw.setPixel(P, C);
-    else
-      return Draw.getPixel(P.x, P.y);
+  setOffset: function(C) {
+    Dw.xNext(Dw.setPixel, Dw.offset, C);
+  },
+  setNext: function(C) {
+    Dw.setOffset(C);
+    Dw.offset += 1;
   },
   setPixel: function(P, C) {
-    Draw.Ctx.fillStyle = 'rgb('+C.r+','+C.g+','+C.b+')';
-    Draw.Ctx.fillRect(P.x, P.y, 1, 1);
+    Dw.Ctx.fillStyle = 'rgba('+C[0]+','+C[1]+','+C[2]+','+C[3]+')';
+    Dw.Ctx.fillRect(P.x, P.y, 1, 1);
   },
-  getPixel: function(x, y) {
-    return Draw.Ctx.getImageData(x,y, 1,1).data;
+  xNext: function(F, P, C) {
+    var P = new MLib.PtoXY(P);
+    return F(P, C);
+  },
+  getOffset: function() {
+    return Dw.xNext(Dw.getPixel, Dw.offset);
+  },
+  getNext: function() {
+    var Px = Dw.getOffset();
+    Dw.offset += 1;
+    return Px;
+  },
+  getPixel: function(P) {
+    return Dw.Ctx.getImageData(P.x,P.y, 1,1).data;
   }
 }
 
-var Objets = {
-  Pos: function(x,y) {
-    this.x = x,
-    this.y = y
+//Math Lib
+var MLib = {
+  PtoXY: function(P) {
+    this.x = P %Dt.Base,
+    this.y = (P -this.x) /Dt.Base
   },
-  Color: function(r,g,b) {
-    this.r = r,
-    this.g = g,
-    this.b = b,
-    this.set = function(key, val) {
-      switch(key) {
-        case 'r': this.r = val; break;
-        case 'g': this.g = val; break;
-        case 'b': this.b = val; break;
-        default:					
-      }
-    }
-  }
-}
-
-var MathLib = {
-  move: 123,
-  RoundUP: function(Num, Div) {
-    return MathLib.Round(Num, Div, true);
-  },
-  RoundDOWN: function(Num, Div) {
-    return MathLib.Round(Num, Div, false);
-  },
-  Round: function(Num, Div, Up) {
+  Round: function(Num, Div) {
     var R = Num %Div;
     var Res = Math.round((Num -R) /Div);
     if (Res && R)
       Res += 1;
     return Res;
   },
-  Process: function(Work, Data) {
-    Object.keys(Data).forEach( function(key) {
-      var val = Data[key];
-      if(typeof(val) != "function")
-        Data.set(key, Work(val) );
+  Process: function(Work, List) {
+    Object.keys(List).forEach( function(key) {
+      List[key] = Work(List[key]);
     });
-    return Data;
+    return List;
   },
-  ToCode: function(Data) {
-    if(Data == undefined)
-      Data = String.fromCharCode(0);
-    return Data.charCodeAt();
+  ToCode: function(Item) {
+    if(Item == undefined)
+      Item = String.fromCharCode(0);
+    return Item.charCodeAt();
   },
-  ToChar: function(Data) {
-    return String.fromCharCode(Data);
-  },
-  Encode: function(D) {
-    D = MathLib.Roll(D, MathLib.move);
-    var R = D %2;
-    if(R)
-      D = ((D -R) /2) +128;
-    else
-      D = D /2;
-    return D;
-  },
-  Decode: function(D) {
-    if(D < 128)
-      D = D *2;
-    else
-      D = ((D -128) +0.5) *2
-    D = MathLib.Roll(D, 256 -MathLib.move);
-    return D;
-  },
-  Roll: function(D, Move) {
-    D += Move;
-    if(D < 0)
-      D = 256 -D;
-    else
-      if(D > 255)
-        D -= 256;
-    return D;
+  ToChar: function(Item) {
+    return String.fromCharCode(Item);
   }
 }
 
+// required's
 var fs = require('fs');
-var canvas = require('canvas');
-var image = canvas.Image;
+var npmCanvas = require('canvas');
+var image = npmCanvas.Image;
 
 module.exports = {
   convert: setData,
   revert: getData,
-  save: savePng,
-  canvas: getCanvas 
+  canvas: getCanvas,
+  save:   savePng
 }
