@@ -1,7 +1,13 @@
 
+/*!
+ * code-image-obfuscator
+ * Copyright (c) 2016 heyderpd <heyderpd@gmail.com>
+ * ISC Licensed
+ */
+
 var setData= function(config) {
-  if (config.pathFile  === undefined) { throw 'img-obfuscator: param "pathFile" is undefined' };
-  if (config.text.split('.').pop() === 'txy') { throw 'img-obfuscator: image need to be png' };
+  //if (config.pathFile  === undefined) { throw 'img-obfuscator: param "pathFile" is undefined' };
+  if (config.text.split('.').pop() === 'png') { throw 'img-obfuscator: image need to be png' };
   if (config.text  === undefined) { throw 'img-obfuscator: param "text" is undefined' };
   if (typeof(config.pathFile) === 'string') {
     var photo = fs.readFileSync(config.pathFile);
@@ -186,7 +192,7 @@ var Dw = {
     Dw.Ctx.fillRect(P.x, P.y, 1, 1);
   },
   xNext: function(F, P, C) {
-    var P = new MLib.PtoXY(P);
+    var P = new MLib.PtoXY(P, Dt.Base);
     return F(P, C);
   },
   getOffset: function() {
@@ -204,9 +210,9 @@ var Dw = {
 
 //Math Lib
 var MLib = {
-  PtoXY: function(P) {
-    this.x = P %Dt.Base,
-    this.y = (P -this.x) /Dt.Base
+  PtoXY: function(P, B) {
+    this.x = P %B,
+    this.y = (P -this.x) /B
   },
   Round: function(Num, Div) {
     var R = Num %Div;

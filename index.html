@@ -1,13 +1,14 @@
 <html>
     <head>
-        <script type="text/javascript" language="javascript" src="./JSInImgEncode.js"></script>
+        <script type="text/javascript" language="javascript" src="./CodeImageObfuscator.js"></script>
         <script type="text/javascript" language="javascript" src="./index.js"></script>
         <link rel="stylesheet" href="./index.css" />
     </head>
     <body>
+        <img id="ideia" src="./ideia.jpg" width="300">
         <textarea class="before" rows="6" cols="10">
 function hello(name = 'Mario') {
-alert('Hello '+name+'!');
+  alert('Hello '+name+'!');
 }
         </textarea>
         <button class="convert" onclick="convert()">convert</button>
