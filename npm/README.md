@@ -11,7 +11,12 @@ Attempt to hide a javascript file during transmission.
 * DONE! Use a source image and merge changing the least original.
 
 ## First Steps
-Install canvas see [npm-canvas](https://www.npmjs.com/package/canvas)
+Now is is in es2015, thanks for:
+[npm~lucasmreis](https://www.npmjs.com/~lucasmreis)
+
+* install canvas see [npm-canvas](https://www.npmjs.com/package/canvas)
+* npm install npm install html-parse-regex
+
 
 ## Example of use:
 ```javascript
