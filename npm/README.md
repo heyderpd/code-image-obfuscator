@@ -6,12 +6,15 @@
 ## Motivation
 Attempt to hide a javascript file during transmission.
 
+## Attention
+Support only png without transparency. Because the transparency destroy the data
+
 ## Future
 * Hide the original data by means of a secret key.
 * DONE! Use a source image and merge changing the least original.
 
 ## First Steps
-Now is is in es2015, thanks for:
+Now use es2015, thanks for:
 [npm~lucasmreis](https://www.npmjs.com/~lucasmreis)
 
 * install canvas see [npm-canvas](https://www.npmjs.com/package/canvas)
@@ -21,20 +24,26 @@ Now is is in es2015, thanks for:
 ## Example of use:
 ```javascript
 const fs = require('fs');
-const { convert, revert, save } = require('code-image-obfuscator')
-
-var after, before, canvas;
+const { save, convert } = require('code-image-obfuscator')
 
 // data before merge with imagem
-before = fs.readFileSync('README.md', 'utf8');
+let before = fs.readFileSync('README.md', 'utf8');
 
 // load image and merge with data
-canvas = convert({pathFile: './photo.png',
+let canvas = convert({pathFile: './photo.png',
                   text: before})
 
 // save new image with data merged
-save('photo.png');
+save('./photo.png');
+```
+
+## Example of use:
+```javascript
+const { load, revert } = require('code-image-obfuscator')
+
+// save new image with data merged
+load('./photo.png');
 
 // data recovery from imagem
-after = revert();
+let after = revert();
 ```

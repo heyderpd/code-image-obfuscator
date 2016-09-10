@@ -5,38 +5,44 @@
  * ISC Licensed
  */
 
-var setData= function(config) {
-  //if (config.pathFile  === undefined) { throw 'img-obfuscator: param "pathFile" is undefined' };
-  if (config.text.split('.').pop() === 'png') { throw 'img-obfuscator: image need to be png' };
-  if (config.text  === undefined) { throw 'img-obfuscator: param "text" is undefined' };
-  if (typeof(config.pathFile) === 'string') {
-    var photo = fs.readFileSync(config.pathFile);
+const setImg = function(pathFile) {
+  if (pathFile.split('.').pop() !== 'png') { throw 'img-obfuscator: image need to be png' };
+  if (typeof(pathFile) === 'string') {
+    const photo = fs.readFileSync(pathFile);
 
-    var img = new image;
+    const img = new image;
     img.src = photo;
 
-    var canvas = new npmCanvas(img.width, img.height)
-    var ctx = canvas.getContext('2d');
+    const canvas = new npmCanvas(img.width, img.height)
+    const ctx = canvas.getContext('2d');
     ctx.drawImage(img, 0, 0, img.width, img.height);
 
-    Dt.Set(config.text, canvas, ctx);
+    Dw.Initialize(canvas, ctx);
+  }
+}
+
+const setData = function(config) {
+  if (config.text  === undefined) { throw 'img-obfuscator: param "text" is undefined' };
+  if (typeof(config.pathFile) === 'string') {
+    setImg(config.pathFile);
+    Dt.Set(config.text);
   } else {
     Dt.Set(config.text, false);
   }
 }
 
-var getData= function() {
+const getData = function() {
   return Dt.Get();
 }
 
-var getCanvas = function() {
+const getCanvas = function() {
   return Dw.Canvas;
 }
 
-var savePng = function(pathFile) {
+const savePng = function(pathFile) {
   if (typeof(pathFile) === 'string') {
-    var out = fs.createWriteStream(pathFile)
-    var stream = Dw.Canvas.pngStream();
+    const out = fs.createWriteStream(pathFile)
+    const stream = Dw.Canvas.pngStream();
 
     stream.on('data', function(chunk){
       out.write(chunk);
@@ -49,7 +55,7 @@ var savePng = function(pathFile) {
 }
 
 //config
-var Co = {
+const Co = {
   R: 3, //RGBA
   C: 3, //CHAR
   L: 8, //CHAR LEN
@@ -57,55 +63,48 @@ var Co = {
 }
 
 //Data
-var Dt = {
+const Dt = {
   Head: '!NPM;',
   Tail: ';code-image-obfuscator!',
   Merge: false,
-  Memo: null,
+  Memo: '',
   Base: null,
-  Set: function(text, canvas, ctx) {
-    if (canvas) {
-      Dt.Merge = true;
-      var config = {canvas: canvas, ctx: ctx};
-    } else {
-      var config = false;
-    }
+  Set: function(text) {
     Dt.Memo = Dt.Head +text +Dt.Tail;
-    Dw.Initialize(config);
     Dw.offset = 0;
     if (Dt.Merge) {
-      var limit = MLib.Round(Dt.Memo.length, Co.C);
-      for (var i=0; i<limit; i++) {
-        var r = i *Co.C;
-        var STREAM = '';
-        for (var b=0; b<Co.C; b++) {
-          var BIN = MLib.ToCode(Dt.Memo[b +r]).toString(2);
+      const limit = MLib.Round(Dt.Memo.length, Co.C);
+      for (let i=0; i<limit; i++) {
+        let r = i *Co.C;
+        let STREAM = '';
+        for (let b=0; b<Co.C; b++) {
+          let BIN = MLib.ToCode(Dt.Memo[b +r]).toString(2);
           while (BIN.length < Co.L){
             BIN = '0'+BIN;
           }
           STREAM += BIN;
         }
-        for (var j=0; j<Co.P; j++) {
-          var r = j *Co.R;
-          var Pixel = Dw.getOffset();
-          for (var p=0; p<Co.R; p++) {
-            var odd = Pixel[p] %2;
-            var BIT = STREAM[p +r];
+        for (let j=0; j<Co.P; j++) {
+          let r = j *Co.R;
+          let Pixel = Dw.getOffset();
+          for (let p=0; p<Co.R; p++) {
+            let odd = Pixel[p] %2;
+            let BIT = STREAM[p +r];
             if (!odd && BIT === '1') {
               Pixel[p] += 1;
             } else if (odd && BIT === '0') {
               Pixel[p] -= 1;
             }
           }
-          var Color = [ Pixel[0], Pixel[1], Pixel[2], Pixel[3] ];
+          let Color = [ Pixel[0], Pixel[1], Pixel[2], Pixel[3] ];
           Dw.setNext(Color);
         }
       }
     } else {
-      var limit = MLib.Round(Dt.Memo.length, 4);
-      for (var i=0; i<limit; i++) {
-        var j = i *3;
-        var C = [ Dt.Memo[j], Dt.Memo[j+1], Dt.Memo[j+2], Dt.Memo[j+3] ];
+      const limit = MLib.Round(Dt.Memo.length, 4);
+      for (let i=0; i<limit; i++) {
+        let j = i *3;
+        let C = [ Dt.Memo[j], Dt.Memo[j+1], Dt.Memo[j+2], Dt.Memo[j+3] ];
         C = MLib.Process(MLib.ToCode, C);
         Dw.setArray(C, i);
       };
@@ -116,38 +115,38 @@ var Dt = {
     Dw.offset = 0;
     Dt.Memo = '';
     if (Dt.Merge) {
-      var limit = MLib.Round(Dw.Canvas.width *Dw.Canvas.height, Co.P);
-      for (var i=0; i<limit; i++) {
-        var STREAM = '';
-        for (var j=0; j<Co.P; j++) {
-          var Pixel = Dw.getNext();
-          for (var p=0; p<Co.R; p++) {
-            var Color = Pixel[p];
-            var BIT = String(Pixel[p] %2);
+      const limit = MLib.Round(Dw.Canvas.width *Dw.Canvas.height, Co.P);
+      for (let i=0; i<limit; i++) {
+        let STREAM = '';
+        for (let j=0; j<Co.P; j++) {
+          let Pixel = Dw.getNext();
+          for (let p=0; p<Co.R; p++) {
+            let Color = Pixel[p];
+            let BIT = String(Pixel[p] %2);
             STREAM += BIT;
           }
         }
-        for (var j=0; j<Co.C; j++) {
-          var r = j *Co.L;
-          BIN = '';
-          for (var k=0; k<Co.L; k++) {
+        for (let j=0; j<Co.C; j++) {
+          let r = j *Co.L;
+          let BIN = '';
+          for (let k=0; k<Co.L; k++) {
             BIN += STREAM[k +r];
           }
-          var DEC = parseInt(BIN, 2);
+          let DEC = parseInt(BIN, 2);
           Dt.Memo += MLib.ToChar(DEC);
         }
       }
     } else {
-      var limit = Dw.Canvas.width *Dw.Canvas.height;
-      for (var i=0; i<limit; i++) {
-        var Pixel = Dw.getNext();
-        var C = [ Pixel[0], Pixel[1], Pixel[2], Pixel[3] ];
+      const limit = Dw.Canvas.width *Dw.Canvas.height;
+      for (let i=0; i<limit; i++) {
+        let Pixel = Dw.getNext();
+        let C = [ Pixel[0], Pixel[1], Pixel[2], Pixel[3] ];
         C = MLib.Process(MLib.ToChar, C);
         Dt.Memo += C[0] +C[1] +C[2] +C[3];
       }
     }
-    var Pattern = new RegExp(`^(${Dt.Head})([\\w\\W]*)(${Dt.Tail})[\\w\\W]*$`);
-    var result = null;
+    const Pattern = new RegExp(`^(${Dt.Head})([\\w\\W]*)(${Dt.Tail})[\\w\\W]*$`);
+    let result = null;
     if ((result = Pattern.exec(Dt.Memo)) !== null) {
       if (Dt.Head === result[1] && result[3] === Dt.Tail) {
         Dt.Memo = result[2];
@@ -159,19 +158,20 @@ var Dt = {
 }
 
 //Draw
-var Dw = {
+const Dw = {
   Canvas: null,
   Ctx: null,
   offset: null,
-  Initialize: function(config) {
-    if (config) {
-      if (Dt.Memo.length /Co.C > config.canvas.width *config.canvas.height /Co.P)
+  Initialize: function(canvas, ctx) {
+    if (canvas) {
+      if (Dt.Memo.length /Co.C > canvas.width *canvas.height /Co.P)
         throw new Error("text is too long, this img can't suport this");
-      Dt.Base = config.canvas.width;
-      Dw.Canvas = config.canvas;
-      Dw.Ctx = config.ctx;
+      Dt.Base = canvas.width;
+      Dw.Canvas = canvas;
+      Dw.Ctx = ctx;
+      Dt.Merge = true;
     } else {
-      var sqrt = Math.sqrt( MLib.Round(Dt.Memo.length, 3) );
+      let sqrt = Math.sqrt( MLib.Round(Dt.Memo.length, 3) );
       Dt.Base = MLib.Round(sqrt, 1);
       if(Dt.Base %1)
         Dt.Base += 1;
@@ -192,14 +192,14 @@ var Dw = {
     Dw.Ctx.fillRect(P.x, P.y, 1, 1);
   },
   xNext: function(F, P, C) {
-    var P = new MLib.PtoXY(P, Dt.Base);
+    P = new MLib.PtoXY(P, Dt.Base);
     return F(P, C);
   },
   getOffset: function() {
     return Dw.xNext(Dw.getPixel, Dw.offset);
   },
   getNext: function() {
-    var Px = Dw.getOffset();
+    let Px = Dw.getOffset();
     Dw.offset += 1;
     return Px;
   },
@@ -209,14 +209,14 @@ var Dw = {
 }
 
 //Math Lib
-var MLib = {
+let MLib = {
   PtoXY: function(P, B) {
     this.x = P %B,
     this.y = (P -this.x) /B
   },
   Round: function(Num, Div) {
-    var R = Num %Div;
-    var Res = Math.round((Num -R) /Div);
+    let R = Num %Div;
+    let Res = Math.round((Num -R) /Div);
     if (Res && R)
       Res += 1;
     return Res;
@@ -238,13 +238,14 @@ var MLib = {
 }
 
 // required's
-var fs = require('fs');
-var npmCanvas = require('canvas');
-var image = npmCanvas.Image;
+const fs = require('fs');
+const npmCanvas = require('canvas');
+const image = npmCanvas.Image;
 
 module.exports = {
+  load: setImg,
+  save: savePng,
   convert: setData,
-  revert: getData,
-  canvas: getCanvas,
-  save:   savePng
+  revert:  getData,
+  canvas: getCanvas
 }

@@ -1,1 +1,1 @@
-module.exports = require('./js/code-image-obfuscator');
+module.exports = require('./dist/code-image-obfuscator');
