@@ -3,18 +3,21 @@ function initialize(){
 	after = document.getElementsByClassName('after')[0];
 	before = document.getElementsByClassName('before')[0];
 	canvas = document.getElementsByTagName('canvas')[0];
+	cio = window.module.cio;
 }
 
 function convert(){
-	data = before.value;
-	CodeImageObfuscator.SetData({text: data, image: "ideia"});
+	cio.setData({
+		text: before.value,
+		imgId: "ideia",
+		canvasId: "canvasImg"});	
 }
 
 function revert(){
-	after.value = CodeImageObfuscator.GetData();
+	after.value = cio.getData();
 }
 
-var after, before, canvas, data, CodeImageObfuscator;
+var after, before, canvas, data, cio;
 
 document.onreadystatechange = function () {
 	if (document.readyState == "complete") {

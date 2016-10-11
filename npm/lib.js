@@ -3,63 +3,8 @@
 /*!
  * code-image-obfuscator
  * Copyright (c) 2016 heyderpd <heyderpd@gmail.com>
- * ISC Licensed
+ * MIT Licensed
  */
-
-var setImg = function setImg(pathFile) {
-  if (pathFile.split('.').pop() !== 'png') {
-    throw 'img-obfuscator: image need to be png';
-  };
-  if (typeof pathFile === 'string') {
-    var photo = fs.readFileSync(pathFile);
-
-    var img = new image();
-    img.src = photo;
-
-    var canvas = new npmCanvas(img.width, img.height);
-    var ctx = canvas.getContext('2d');
-    ctx.drawImage(img, 0, 0, img.width, img.height);
-
-    Dw.Initialize(canvas, ctx);
-  }
-};
-
-var setData = function setData(config) {
-  if (config.text === undefined) {
-    throw 'img-obfuscator: param "text" is undefined';
-  };
-  if (typeof config.pathFile === 'string') {
-    setImg(config.pathFile);
-    Dt.Set(config.text);
-  } else {
-    Dt.Set(config.text, false);
-  }
-};
-
-var getData = function getData() {
-  return Dt.Get();
-};
-
-var getCanvas = function getCanvas() {
-  return Dw.Canvas;
-};
-
-var savePng = function savePng(pathFile) {
-  if (typeof pathFile === 'string') {
-    (function () {
-      var out = fs.createWriteStream(pathFile);
-      var stream = Dw.Canvas.pngStream();
-
-      stream.on('data', function (chunk) {
-        out.write(chunk);
-      });
-
-      stream.on('end', function () {
-        console.log('new png created');
-      });
-    })();
-  }
-};
 
 //config
 var Co = {
@@ -71,8 +16,8 @@ var Co = {
 
 //Data
 var Dt = {
-  Head: '!NPM;',
-  Tail: ';code-image-obfuscator!',
+  Head: '!NPM',
+  Tail: 'code-image-obfuscator!',
   Merge: false,
   Memo: '',
   Base: null,
@@ -103,7 +48,7 @@ var Dt = {
               Pixel[p] -= 1;
             }
           }
-          var Color = [Pixel[0], Pixel[1], Pixel[2], Pixel[3]];
+          var Color = [Pixel[0], Pixel[1], Pixel[2], 255];
           Dw.setNext(Color);
         }
       }
@@ -113,8 +58,9 @@ var Dt = {
         var _j = _i * 3;
         var C = [Dt.Memo[_j], Dt.Memo[_j + 1], Dt.Memo[_j + 2], Dt.Memo[_j + 3]];
         C = MLib.Process(MLib.ToCode, C);
-        Dw.setArray(C, _i);
-      };
+        Dw.getOffset();
+        Dw.setNext(C);
+      }
     }
     return Dw.Canvas;
   },
@@ -239,15 +185,9 @@ var MLib = {
   }
 };
 
-// required's
-var fs = require('fs');
-var npmCanvas = require('canvas');
-var image = npmCanvas.Image;
-
 module.exports = {
-  load: setImg,
-  save: savePng,
-  convert: setData,
-  revert: getData,
-  canvas: getCanvas
+  Co: Co,
+  Dt: Dt,
+  Dw: Dw,
+  MLib: MLib
 };

@@ -1,17 +1,15 @@
 {
+  "license": "MIT",
   "name": "code-image-obfuscator",
-  "version": "1.3.7",
+  "version": "1.4.0",
   "description": "merge data and image png",
   "main": "index.js",
-  "scripts": {
-    "transpile": "babel js/ -d dist/"
-  },
+  "scripts": {},
   "repository": {
     "type": "git",
     "url": "git+https://github.com/heyderpd/code-image-obfuscator.git"
   },
   "author": "NPM code image obfuscator <heyderpd@gmail.com> (http://heyderpd.github.io)",
-  "license": "ISC",
   "bugs": {
     "url": "https://github.com/heyderpd/code-image-obfuscator/issues"
   },
@@ -28,7 +26,5 @@
     "text",
     "canvas"
   ],
-  "devDependencies": {
-    "babel-cli": "^6.14.0"
-  }
+  "devDependencies": {}
 }
