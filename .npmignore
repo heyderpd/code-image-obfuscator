@@ -1,3 +1,6 @@
 
 npm-debug*
 node_modules/*
+
+src/*
+test/*

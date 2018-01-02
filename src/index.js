@@ -1,3 +1,4 @@
+'use strict';
 
 /*!
  * code-image-obfuscator
@@ -5,65 +6,78 @@
  * MIT Licensed
  */
 
-const setImg = function(pathFile) {
-  if (pathFile.split('.').pop() !== 'png') { throw 'img-obfuscator: image need to be png' }
-  if (typeof(pathFile) === 'string') {
-    const photo = fs.readFileSync(pathFile)
-
-    const img = new image
-    img.src = photo
-
-    const canvas = new npmCanvas(img.width, img.height)
-    const ctx = canvas.getContext('2d')
-    ctx.drawImage(img, 0, 0, img.width, img.height)
-
-    Dw.Initialize(canvas, ctx)
+var setImg = function setImg(pathFile) {
+  if (pathFile.split('.').pop() !== 'png') {
+    throw 'img-obfuscator: image need to be png';
   }
-}
+  if (typeof pathFile === 'string') {
+    var photo = fs.readFileSync(pathFile);
 
-const setData = function(config) {
-  if (config.text  === undefined) { throw 'img-obfuscator: param "text" is undefined' }
-  if (typeof(config.pathFile) === 'string') {
-    setImg(config.pathFile)
-    Dt.Set(config.text)
+    var img = new image();
+    img.src = photo;
+
+    var canvas = new npmCanvas(img.width, img.height);
+    var ctx = canvas.getContext('2d');
+    ctx.drawImage(img, 0, 0, img.width, img.height);
+
+    Dw.Initialize(canvas, ctx);
+  }
+};
+
+var setData = function setData(config) {
+  if (config.text === undefined) {
+    throw 'img-obfuscator: param "text" is undefined';
+  }
+  if (typeof config.pathFile === 'string') {
+    setImg(config.pathFile);
+    Dt.Set(config.text);
   } else {
-    Dt.Set(config.text, false)
+    Dt.Set(config.text, false);
   }
-}
+};
 
-const getData = function() {
-  return Dt.Get()
-}
+var getData = function getData() {
+  return Dt.Get();
+};
 
-const getCanvas = function() {
-  return Dw.Canvas
-}
+var getCanvas = function getCanvas() {
+  return Dw.Canvas;
+};
 
-const savePng = function(pathFile) {
-  if (typeof(pathFile) === 'string') {
-    const out = fs.createWriteStream(pathFile)
-    const stream = Dw.Canvas.pngStream()
+var savePng = function savePng(pathFile) {
+  if (typeof pathFile === 'string') {
+    (function () {
+      var out = fs.createWriteStream(pathFile);
+      var stream = Dw.Canvas.pngStream();
 
-    stream.on('data', function(chunk){
-      out.write(chunk)
-    })
+      stream.on('data', function (chunk) {
+        out.write(chunk);
+      });
 
-    stream.on('end', function(){
-      console.log('new png created')
-    })
+      stream.on('end', function () {
+        console.log('new png created');
+      });
+    })();
   }
-}
+};
 
 // required's
-const { Co, Dt, Dw, MLib } = require('./lib')
-const fs = require('fs')
-const npmCanvas = require('canvas')
-const image = npmCanvas.Image
+
+var _require = require('./lib');
+
+var Co = _require.Co;
+var Dt = _require.Dt;
+var Dw = _require.Dw;
+var MLib = _require.MLib;
+
+var fs = require('fs');
+var npmCanvas = require('canvas');
+var image = npmCanvas.Image;
 
 module.exports = {
   load: setImg,
   save: savePng,
   convert: setData,
-  revert:  getData,
+  revert: getData,
   canvas: getCanvas
-}
+};
