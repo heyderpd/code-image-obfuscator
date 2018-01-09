@@ -21,6 +21,6 @@ export const Process = (Work, List) => {
   return List
 }
 
-export const ToCode = Item => String.fromCharCode(Item || 0)
+export const ToCode = (Item = '\u0000') => Item.charCodeAt()
 
 export const ToChar = Item => String.fromCharCode(Item)
