@@ -1,61 +1,67 @@
+import throwError from './throw'
+import {
+  createDraw,
+  getCanvas as _getCanvas,
+  getInjectedData,
+  injectDataToCanvas
+} from './main'
 
-/*!
- * code-image-obfuscator
- * Copyright (c) 2016 heyderpd <heyderpd@gmail.com>
- * MIT Licensed
- */
+const state = {}
 
-const setData = function (config) {
-  if (config.imgId  === undefined) { throw 'img-obfuscator: param "imgId" is undefined' }
-  if (config.text  === undefined) { throw 'img-obfuscator: param "text" is undefined' }
-  if (typeof(config.imgId) === 'string') {
-    var img = document.getElementById(config.imgId)
+const validateString = (name, value) => {
+  if (value) {
+    throwError(`param "${name}" is invalid`, value)
 
-    var canvas = document.createElement('canvas')
-    var ctx = canvas.getContext('2d')
-    ctx.drawImage(img, 0, 0, img.width, img.height)
-
-    Dw.Initialize(canvas, ctx)
-    Dt.Set(config.text)
-
-    if(config.canvasId) {
-      writeCanvas(config.canvasId)
-    }
   } else {
-    Dt.Set(config.text, false)
+    throwError(`param "${name}" is undefined`)
+  }
+}
+
+const setData = function ({ imgId, canvasId, text }) {
+  validateString('canvasId', canvasId)
+  validateString('text', text)
+
+  if (typeof(imgId) === 'string') {
+    state.imgLoaded = true
+    const img = document.getElementById(imgId)
+    const canvas = document.createElement('canvas')
+    createDraw(img, canvas)
+    injectDataToCanvas(text, true)
+
+  } else {
+    state.imgLoaded = false
+    injectDataToCanvas(text, false)
   }
 }
 
 const getData = function() {
-  return Dt.Get()
+  if (state.imgLoaded) {
+    return getInjectedData(true)
+  } else {
+    return getInjectedData(false)
+  }
 }
 
-const setCanvas = function() { // TODO funcao incompleta
-}
+const getCanvas = _getCanvas
 
-const getCanvas = function() {
-  Dw.Canvas
-}
-
-var writeCanvas = function writeCanvas(CanvasID) {
-  var Canvas = document.getElementById(CanvasID)
+const writeCanvas = function writeCanvas(CanvasID) {
+  const Canvas = document.getElementById(CanvasID)
   Dw.Canvas.id = Canvas.id
   Dw.Canvas.style = Canvas.style
   Dw.Canvas.className = Canvas.className
   Canvas.parentNode.replaceChild(Dw.Canvas, Canvas)
 };
 
-// required's
-const { Co, Dt, Dw, MLib } = require('../src/lib')
-
 const cio = {
-  setData: setData,
-  getData: getData,
-  setCanvas: getCanvas,
-  getCanvas: getCanvas,
-  renderCanvas: writeCanvas
+  set: setData,
+  get: setData,
+  canvas: {
+    set: setCanvas,
+    get: getCanvas
+  },
+  render
 }
 
-window.module = { cio: cio }
+// window.module = { cio: cio }
 
 module.exports = cio
