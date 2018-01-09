@@ -1,9 +1,10 @@
+var path = require('path');
 var webpack = require('webpack');
 
 module.exports = {
-  entry: './web/main.js',
+  entry: __dirname+'/src/client.js',
   output: {
-    path: './npm',
+    path: __dirname+'/dist',
     filename: 'code-image-obfuscator.bundle.js'
   },
   module: {
@@ -18,8 +19,14 @@ module.exports = {
       }
     ]
   },
+  resolve: {
+    modules: ['node_modules']
+  },
+  resolveLoader: {
+    modules: [path.resolve(__dirname, 'node_modules')]
+  },
   plugins: [
-    //new webpack.optimize.CommonsChunkPlugin("code-image-obfuscator.chunk.js")//,
+    /* new webpack.optimize.CommonsChunkPlugin("code-image-obfuscator.chunk.js"), */
     new webpack.optimize.UglifyJsPlugin({ compress: { warnings: false } })
   ]
 };
