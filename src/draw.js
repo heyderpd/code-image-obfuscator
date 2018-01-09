@@ -33,7 +33,8 @@ const draw = function (_canvas, _ctx, dataLength) {
   }
 
   const setPixel = (P, C) => {
-    ctx.fillStyle = 'rgba(' + C[0] + ',' + C[1] + ',' + C[2] + ',' + C[3] + ')'
+    const [R, G, B, A] = C
+    ctx.fillStyle = `rgba(${R},${G},${B},${A})`
     ctx.fillRect(P.x, P.y, 1, 1)
   }
 

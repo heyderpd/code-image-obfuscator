@@ -1,46 +1,42 @@
 // requided's
 
-const assert = require('assert')
-const fs = require('fs')
+import assert from 'assert'
+import fs from 'fs'
 
-const cleardep = require('../npm/index')
+import { load, save, injectData, recoveryData } from '../src/server'
 
+let after, before, canvas
 
-// start test
+before = fs.readFileSync('./README.md', 'utf8')
+after = ''
 
-const { convert, revert, save } = require('../npm/index')
-
-let after, before, canvas;
-
-before = fs.readFileSync('./README.md', 'utf8');
-after = '';
-console.log(__dirname)
 describe('cio', function() {
-  it('A.png', function() {
-    canvas = convert({
-      pathFile: './test/ori-a.png',
-      text: before})
-    save('./test/ori-a.png')
-    after = revert()
+  it('A.png', done => {
+    load('./test/ori-a.png')
+    injectData(before)
+
+    save('./test/res-a.png')
+    after = recoveryData()
+
     fs.writeFileSync('./test/res-A.txt', after)
-
     assert.deepEqual(
       before,
       after
     )
+    done()
   })
-
+/*
   it('B.png', function() {
-    canvas = convert({
-      pathFile: './test/ori-b.png',
-      text: before})
-    save('./test/ori-b.png')
-    after = revert()
-    fs.writeFileSync('./test/res-B.txt', after)
+    load('./test/ori-b.png')
+    injectData(before)
 
+    save('./test/res-b.png')
+    after = recoveryData()
+
+    fs.writeFileSync('./test/res-B.txt', after)
     assert.deepEqual(
       before,
       after
     )
-  })
+  })*/
 })
