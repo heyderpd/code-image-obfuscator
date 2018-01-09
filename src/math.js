@@ -8,7 +8,7 @@ export const PtoXY = (P, B) => {
 }
 
 export const Round = (Num, Div) => {
-  const res = Math.round((Num -R) /Div)
+  const res = Math.round((Num -(Num %Div)) /Div)
   return Num %Div
     ? res +1
     : res

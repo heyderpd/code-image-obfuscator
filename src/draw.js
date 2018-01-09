@@ -1,11 +1,10 @@
 
 import { PtoXY, Round } from './math'
 
-const draw = function (...args) {
+const draw = function (_canvas, _ctx, dataLength) {
   let offset = null
   let canvas = null
   let ctx = null
-  initialize(...args)
 
   const initialize = (_canvas, _ctx, dataLength = 0) => {
     canvas = _canvas
@@ -52,8 +51,9 @@ const draw = function (...args) {
     return Px
   }
 
+  initialize(_canvas, _ctx, dataLength)
+
   return {
-    initialize,
     reset,
     getCanvas,
     getOffset,
