@@ -11,9 +11,11 @@ const needInitializeDraw = () => {
   }
 }
 
-export const createDraw = (img, canvas) => {
-  const ctx = canvas.getContext('2d')
-  ctx.drawImage(img, 0, 0, img.width, img.height)
+export const createDraw = (img, canvas, ctx = false) => {
+  if (!ctx) {
+    ctx = canvas.getContext('2d')
+    ctx.drawImage(img, 0, 0, img.width, img.height)
+  }
   Draw = newDraw(canvas, ctx)
 }
 

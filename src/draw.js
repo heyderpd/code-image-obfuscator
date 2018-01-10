@@ -16,7 +16,7 @@ const draw = function (_canvas, _ctx, dataLength) {
     offset = 0
   }
 
-  const getCanvas = _ => canvas
+  const getCanvas = _ => ctx.canvas
 
   const xNext = (F, P, C) => {
     P = PtoXY(P, canvas.width)
