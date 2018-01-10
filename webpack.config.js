@@ -2,7 +2,7 @@ var path = require('path');
 var webpack = require('webpack');
 
 module.exports = {
-  entry: __dirname+'/src/client.js',
+  entry: __dirname+'/dist/client.js',
   output: {
     path: __dirname+'/dist',
     filename: 'code-image-obfuscator.bundle.js'
