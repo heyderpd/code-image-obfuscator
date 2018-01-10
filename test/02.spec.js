@@ -1,42 +1,49 @@
-// requided's
-
 import assert from 'assert'
 import fs from 'fs'
 
-import { load, save, injectData, recoveryData } from '../src/server'
+import { load, save, injectData, recoveryData } from '../dist/server'
 
 let after, before, canvas
 
 before = fs.readFileSync('./README.md', 'utf8')
 after = ''
 
+const saveInfoIn = fileName => {
+  load('./test/before/' + fileName)
+  injectData(before)
+  save('./test/after/' + fileName)
+}
+
+const getInfoFrom = fileName => {
+  load('./test/after/' + fileName)
+  return recoveryData()
+}
+
 describe('cio', function() {
-  it('A.png', done => {
-    load('./test/ori-a.png')
-    injectData(before)
-
-    save('./test/res-a.png')
-    after = recoveryData()
-
-    fs.writeFileSync('./test/res-A.txt', after)
-    assert.deepEqual(
-      before,
-      after
-    )
-    done()
+  it('creat files', () => {
+    saveInfoIn('ia.png')
+    saveInfoIn('ib.png')
   })
-/*
-  it('B.png', function() {
-    load('./test/ori-b.png')
-    injectData(before)
 
-    save('./test/res-b.png')
-    after = recoveryData()
+  it('A.png', done => {
+    setTimeout(_ => {
+      after = getInfoFrom('ia.png')
+      assert.deepEqual(
+        before,
+        after
+      )
+      done()
+    }, 1000)
+  })
 
-    fs.writeFileSync('./test/res-B.txt', after)
-    assert.deepEqual(
-      before,
-      after
-    )
-  })*/
+  it('B.png', done => {
+    setTimeout(_ => {
+      after = getInfoFrom('ib.png')
+      assert.deepEqual(
+        before,
+        after
+      )
+      done()
+    }, 1000)
+  })
 })
