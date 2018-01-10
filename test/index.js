@@ -11,7 +11,8 @@ function convert(){
 	cio.data.set({
 		text: before.value,
 		imgId: "ideia",
-		canvasId: "canvasImg"})
+		canvasId: "canvasImg"
+	})
 }
 
 function revert(){

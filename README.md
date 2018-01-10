@@ -50,4 +50,18 @@ import { load, save, injectData, recoveryData } from 'code-image-obfuscator'
 
 ## Example [browser]:
 ```javascript
+bundle => 'dist/code-image-obfuscator.bundle.js'
+
+function convert(){
+	cio.data.set({
+		text: message,
+		imgId: "id of image",
+    canvasId: "id of canvas"
+  })
+}
+
+function revert(){
+	cio.load.canvas("id of canvas")
+	return cio.data.get()
+}
 ```
