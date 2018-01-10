@@ -10,23 +10,44 @@ const state = {}
 
 const validateString = (name, value) => {
   if (value) {
-    throwError(`param "${name}" is invalid`, value)
+    if (typeof(value) !== 'string') {
+      throwError(`param "${name}" is invalid`, value)
+    }
 
   } else {
     throwError(`param "${name}" is undefined`)
   }
 }
 
-const setData = function ({ imgId, canvasId, text }) {
+const loadImg = function (imgId) {
+  validateString('imgId', imgId)
+
+  state.imgLoaded = true
+  const img = document.getElementById(imgId)
+  const canvas = document.createElement('canvas')
+  createDraw(img, canvas)
+}
+
+const loadCanvas = function (canvasId) {
   validateString('canvasId', canvasId)
+
+  state.imgLoaded = true
+  const canvas = document.getElementById(canvasId)
+  const ctx = canvas.getContext('2d')
+  createDraw(false, canvas, ctx)
+}
+
+const setData = function ({ imgId, canvasId, text }) {
+  canvasId && validateString('canvasId', canvasId)
   validateString('text', text)
 
   if (typeof(imgId) === 'string') {
     state.imgLoaded = true
-    const img = document.getElementById(imgId)
-    const canvas = document.createElement('canvas')
-    createDraw(img, canvas)
+    loadImg(imgId)
     injectDataToCanvas(text, true)
+    if (canvasId) {
+      writeCanvas(canvasId)
+    }
 
   } else {
     state.imgLoaded = false
@@ -46,22 +67,31 @@ const getCanvas = _getCanvas
 
 const writeCanvas = function writeCanvas(CanvasID) {
   const Canvas = document.getElementById(CanvasID)
-  Dw.Canvas.id = Canvas.id
-  Dw.Canvas.style = Canvas.style
-  Dw.Canvas.className = Canvas.className
-  Canvas.parentNode.replaceChild(Dw.Canvas, Canvas)
+  const _Canvas = _getCanvas()
+  _Canvas.id = Canvas.id
+  _Canvas.style = Canvas.style
+  _Canvas.className = Canvas.className
+  Canvas.parentNode.replaceChild(_Canvas, Canvas)
 };
 
 const cio = {
-  set: setData,
-  get: setData,
-  canvas: {
-    set: setCanvas,
-    get: getCanvas
+  load:{
+    img: loadImg,
+    canvas: loadCanvas
   },
-  render
+  data: {
+    set: setData,
+    get: getData
+  },
+  canvas: {
+    set: writeCanvas,
+    get: getCanvas
+  }
 }
 
-// window.module = { cio: cio }
+if (window.module) {
+  window.module.cio = cio
 
-module.exports = cio
+} else {
+  window.module = { cio }
+}
