@@ -36,18 +36,22 @@ export const findMessageTail = (messageNextChunk: string, messageLastChunk: stri
   if (!match) {
     return null
   }
-  const group: string = match[0]
-  const length: number = match.index
-  const position: number = length + group.length
-  if (position > chunkSize) {
+  const position: number = match.index
+  if (position == 0) {
     return {
-      chunk: 1,
-      position: position - chunkSize,
+      chunk: -1,
+      position: chunkSize,
     }
-  } else {
+  }
+  if (position < chunkSize) {
     return {
       chunk: 0,
       position,
+    }
+  } else {
+    return {
+      chunk: 1,
+      position: position - chunkSize,
     }
   }
 }
