@@ -1,6 +1,7 @@
-import { characterLimit, colorLength, pixelSize, wordLength } from './config'
-import { Round, ToCode, ToChar, Process } from './math'
-import throwError from './throw'
+import { characterLimit, colorLength, pixelSize, wordLength } from '../config'
+import { Round, ToCode, ToChar, Process } from '../math'
+import throwError from '../throw'
+import checkCanvasSuportMessage from './canvas-limit'
 
 const head = '{2-0A}->'
 const tail = '<-{NPM~CODE-IMAGE-OBFUSCATOR}'
@@ -27,7 +28,7 @@ const extractMessage = _ => {
 
 const throwIfCantSuportMessage = draw => {
   const canvas = draw.getCanvas()
-  if (canvas && message.length /characterLimit > canvas.width *canvas.height /pixelSize) {
+  if (checkCanvasSuportMessage(canvas.width, canvas.height, message.length)) {
     throw new Error("text is too long, this img can't suport this")
   }
 }
