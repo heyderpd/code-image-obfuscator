@@ -1,6 +1,7 @@
 import { characterLimit, pixelSize } from '../config'
 import throwError from '../throw'
 
+
 const canvasMessageLimit = (width: number, height: number): number => {
   return width * height / pixelSize
 }
