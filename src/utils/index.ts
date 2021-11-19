@@ -49,4 +49,13 @@ export const convertCharToBinaryArray = char => {
     .map(bit => bit === '1')
 }
 
-export const convertBinaryToChar = char => String.fromCharCode(char)
+export const convertBinaryToChar = char => {
+  // char = ['0', '1', '0', '0', '1', '0', '0', '0']
+  // var JJ = char.join('')
+  // var II = parseInt(JJ, 2)
+  // var SS = String.fromCharCode(II)
+  // console.log({ char, JJ, II, SS })
+  // // throw 7
+  // return SS
+  return String.fromCharCode(parseInt(char.join(''), 2))
+}

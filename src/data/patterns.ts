@@ -1,5 +1,5 @@
 import * as pkg from '../../package.json'
-import { chunkSize } from '../config'
+import { messageChunkSize } from '../config'
 
 
 const project = `${pkg.name}@${pkg.version}`
@@ -8,7 +8,7 @@ export const tail = `<<<{${project}}`
 const headPattern = new RegExp(`^(${head})`)
 const tailPattern = new RegExp(`(${tail})`)
 
-if (project.length > chunkSize) {
+if (project.length > messageChunkSize * 2) {
   throw new Error('invalid word buffer size')
 }
 
@@ -44,10 +44,10 @@ export const findMessageTail = (messageChunk: string, messageNextChunk: string):
   if (position == 0) {
     return {
       chunk: -1,
-      position: chunkSize,
+      position: messageChunkSize,
     }
   }
-  if (position < chunkSize) {
+  if (position < messageChunkSize) {
     return {
       chunk: 0,
       position,
@@ -55,7 +55,7 @@ export const findMessageTail = (messageChunk: string, messageNextChunk: string):
   } else {
     return {
       chunk: 1,
-      position: position - chunkSize,
+      position: position - messageChunkSize,
     }
   }
 }

@@ -8,7 +8,7 @@ const testInjection = async fileName => {
   const originalFile = `./test/before/${fileName}`
   const newFile = `./test/after/${fileName}`
   await Save(originalFile, data, newFile)
-  // await Load(newFile)
+  // return await Load(newFile)
 }
 
 describe('basic test', function() {
@@ -23,6 +23,7 @@ describe('basic test', function() {
 
   it('B.png', async done => {
     const dataAfter = await testInjection('ib.png')
+    console.log({dataAfter})
     assert.deepEqual(
       data,
       dataAfter

@@ -18,6 +18,7 @@ export const load = (imagePath: string) => {
   const originalCanvas = new Image()
   originalCanvas.src = fs.readFileSync(imagePath)
   const newCanvas = new npmCanvas(originalCanvas.width, originalCanvas.height)
+  console.log({ imagePath, originalCanvas, newCanvas })
   return [ originalCanvas, newCanvas ]
 }
 
@@ -26,9 +27,7 @@ export const save = async (imagePath: string, canvas: any) => {
     try {
       checkImagePath(imagePath)
       const out = fs.createWriteStream(imagePath)
-      console.log('***********1', { out, canvas })
       const stream = canvas.pngStream()
-      console.log('***********2', { stream })
       stream.on('data', chunk => out.write(chunk))
       stream.on('end', _ => {
         console.log('new png created')
