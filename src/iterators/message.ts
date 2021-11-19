@@ -1,5 +1,5 @@
 import { chunkSize } from '../config'
-import { convertCharToBinary } from '../math'
+import { convertCharToBinary } from '../utils'
 
 
 export function convertChunkToData(chunk: string){

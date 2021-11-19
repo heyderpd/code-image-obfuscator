@@ -1,10 +1,12 @@
-import { wordLength } from './config'
+import { wordLength } from '../config'
+import { PixelPostion } from '../interfaces'
 
-export const PositionToXY = (P, B) => {
-  const x = P % B
+export const PositionToXY = (Position: number, Base: number): PixelPostion => {
+  const X = Position % Base
+  const Y = (Position - X) / Base
   return {
-    x,
-    y: (P - x) / B
+    X,
+    Y,
   }
 }
 
@@ -30,7 +32,7 @@ const filledZeros = new Array(wordLength).fill(0).join('')
 
 export const convertCharToBinary = (char = '\u0000') => {
   return (
-    wordLength + char
+    filledZeros + char
       .charCodeAt(0)
       .toString(2)
   ).substr(-wordLength)
