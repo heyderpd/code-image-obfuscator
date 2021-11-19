@@ -17,12 +17,12 @@ export class Canvas {
   }
 
   setPixel (Pixel: PixelPostion, C: Color) {
-    context.fillStyle = `rgba(${C.R},${C.G},${C.B},${C.A})`
-    context.fillRect(Pixel.X, Pixel.Y, 1, 1)
+    this.context.fillStyle = `rgba(${C.R},${C.G},${C.B},${C.A})`
+    this.context.fillRect(Pixel.X, Pixel.Y, 1, 1)
   }
 
   getPixel (Pixel: PixelPostion) {
-    return context.getImageData(Pixel.X, Pixel.Y, 1, 1).data
+    return this.context.getImageData(Pixel.X, Pixel.Y, 1, 1).data
   }
 
   save (imagePath: string) {

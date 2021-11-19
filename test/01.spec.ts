@@ -1,5 +1,5 @@
-import assert from 'assert'
-import fs from 'fs'
+import * as assert from 'assert'
+import * as fs from 'fs'
 import { Load, Save } from '../src'
 
 const dataBefore = fs.readFileSync('./README.md', 'utf8')

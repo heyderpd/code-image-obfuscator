@@ -1,15 +1,15 @@
 
-interface ChunkPostion {
+export interface ChunkPostion {
   chunk: number;
   position: number;
 }
 
-interface PixelPostion {
+export interface PixelPostion {
   X: number;
   Y: number;
 }
 
-interface Color {
+export interface Color {
   R: number;
   G: number;
   B: number;

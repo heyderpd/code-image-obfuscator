@@ -8,8 +8,8 @@ export const SaveIterator = (canvas: any) => {
       this._pixel = 0
       this._cache = []
       const savePixel = () => {
-        const { x, y } = PositionToXY(this._pixel, canvas.width)
-        const pixel = canvas.getPixel(x, y)
+        const position = PositionToXY(this._pixel, canvas.width)
+        const pixel = canvas.getPixel(position)
         this._cache
           .map((bitStr, color) => {
             let value = pixel[color]
@@ -20,9 +20,9 @@ export const SaveIterator = (canvas: any) => {
             } else if (!odd && bit) {
               value += 1
             }
-            pixel.setColor(color, value)
+            pixel[color] = value
           })
-        canvas.setPixel(x, y, pixel)
+        canvas.setPixel(position, pixel)
         this._pixel += 1
       }
       return {
@@ -34,7 +34,7 @@ export const SaveIterator = (canvas: any) => {
           data
             .split('')
             .map(bit => {
-              this._cache.append(bit)
+              this._cache.push(bit)
               if (this._cache.length == colorLength) {
                 savePixel()
                 this._cache = []
@@ -51,8 +51,8 @@ export const LoadIterator = (canvas: any) => {
     [Symbol.iterator]: function() {
       this._pixel = 0
       const loadPixel = () => {
-        const { x, y } = PositionToXY(this._pixel, canvas.width)
-        const pixel = canvas.getPixel(x, y)
+        const position = PositionToXY(this._pixel, canvas.width)
+        const pixel = canvas.getPixel(position)
         this._pixel += 1
         return pixel
           .map(color => IsODD(color))

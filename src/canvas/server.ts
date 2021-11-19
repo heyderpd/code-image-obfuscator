@@ -1,5 +1,7 @@
-import fs from 'fs'
-import npmCanvas, { Image } from 'canvas'
+import * as fs from 'fs'
+import * as npmCanvas from 'canvas'
+const Image = npmCanvas.Image
+
 
 const checkImagePath = pathFile => {
   if (pathFile && typeof(pathFile) === 'string' && pathFile.length > 0) {
