@@ -18,7 +18,6 @@ export const load = (imagePath: string) => {
   const originalCanvas = new Image()
   originalCanvas.src = fs.readFileSync(imagePath)
   const newCanvas = new npmCanvas(originalCanvas.width, originalCanvas.height)
-  console.log({ imagePath, originalCanvas, newCanvas })
   return [ originalCanvas, newCanvas ]
 }
 

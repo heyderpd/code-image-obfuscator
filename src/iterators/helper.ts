@@ -21,14 +21,9 @@ export class Iterator {
       chunk = this._buffer
       this._buffer = []
     } else {
-      // console.log('buffer init', JSON.stringify(this._buffer))
       chunk = this._buffer.slice(0, this._size)
-      // console.log('chunk', JSON.stringify(chunk))
       this._buffer = this._buffer.slice(this._size)
-      // console.log('buffer final', JSON.stringify(this._buffer))
-      // throw 8
     }
-    console.log('itemitem', { chunk, _buffer: this._buffer })
     return this.process(chunk)
   }
 
@@ -37,7 +32,6 @@ export class Iterator {
       return this._flush()
     }
     const item = this.getItem()
-    console.log('itemitem', { item })
     if (item.done) {
       return this._flush()
     }
@@ -63,9 +57,7 @@ export class Iterator {
     let value = null
     while (value == null) {
       value = this._pushAndFlush()
-      console.log('pushing!')
       if (this._done) {
-        console.log('done!')
         break
       }
     }

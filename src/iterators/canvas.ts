@@ -42,7 +42,6 @@ export class CanvasWriterIterator extends Iterator {
 
   constructor (dataIterator: Iterator, canvasWrapper: any) {
     super(dataIterator)
-    // this._iterator = dataIterator.getIterator()
     this._canvasWrapper = canvasWrapper
   }
 
@@ -67,7 +66,6 @@ export class CanvasWriterIterator extends Iterator {
     }
     const pixel = this._canvasWrapper.getPixel(position)
     const newPixel = ConvertDataToPixel(pixel, data)
-    console.log({newPixel})
     this._canvasWrapper.setPixel(position, newPixel)
   }
 

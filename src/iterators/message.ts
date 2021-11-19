@@ -13,23 +13,14 @@ export class MessageReaderMiddleIterator extends Iterator {
     super(iterator)
   }
 
-  _getChar (data: string[]) {
-    const char  = data.slice(0, wordLength)
-    data = data.slice(wordLength)
-    return [char, data]
-  }
-
   process (data: string[]) {
-    console.log('********', { data })
     let chunk = ''
     let char
     while (data.length > 0) {
-      [char, data] = this._getChar(data)
-      console.log('********', { char })
+      char = data.slice(0, wordLength)
+      data = data.slice(wordLength)
       chunk += convertBinaryToChar(char)
     }
-    console.log('********', { data, chunk })
-    throw 4
     return chunk
   }
 
@@ -46,15 +37,15 @@ export class MessageReaderIterator extends Iterator {
     super(new MessageReaderMiddleIterator(iterator))
   }
 
-  process (chunk: string) {
+  process (chunk) {
+    chunk = chunk.pop()
     if (this._findingHead) {
       const start = findMessageHead(chunk)
       if (!start) {
-        // console.log({ chunk, start })
         throw new Error('message not found')
       }
-      this.message = chunk.slice(start.position)
-      this._lastChunk = chunk
+      this._lastChunk = chunk.slice(start.position)
+      this.message = this._lastChunk
       this._findingHead = false
       return
     }

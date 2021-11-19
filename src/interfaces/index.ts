@@ -24,7 +24,6 @@ export interface IteratorResponse {
 
 export const CastPixel = function (Array: number[]) {
   const [R, G, B, A] = Array
-  console.log({Array})
   const P: Pixel = {
     R,
     G,
