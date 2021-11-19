@@ -1,10 +1,10 @@
-import pkg from '../../package.json'
+import * as pkg from '../../package.json'
 import { chunkSize } from '../config'
 
 
 const project = `${pkg.name}@${pkg.version}`
-const head = `{${project}}>>>`
-const tail = `<<<{${project}}`
+export const head = `{${project}}>>>`
+export const tail = `<<<{${project}}`
 const headPattern = new RegExp(`^(${head})`)
 const tailPattern = new RegExp(`(${tail})`)
 
