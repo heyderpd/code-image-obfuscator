@@ -1,7 +1,15 @@
 import { chunkSize } from '../config'
+import { convertCharToBinary } from '../math'
 
 
-const MessageIterator = (message: string) => {
+export function convertChunkToData(chunk: string){
+  return chunk
+    .split('')
+    .map(char => convertCharToBinary(char))
+    .join('')
+}
+
+export const LoadIterator = (message: string) => {
   return {
     [Symbol.iterator]: function() {
       this._index  = 0
@@ -16,7 +24,7 @@ const MessageIterator = (message: string) => {
           this._index += chunkSize
           const end = this._index
           return {
-            value: message.slice(start, end),
+            value: convertChunkToData(message.slice(start, end)),
             done: false,
           }
         }
@@ -24,5 +32,3 @@ const MessageIterator = (message: string) => {
     }
   }
 }
-
-export default MessageIterator
