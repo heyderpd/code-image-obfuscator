@@ -40,4 +40,4 @@ export const convertCharToBinary = (char = '\u0000') => {
   ).substr(-wordLength)
 }
 
-export const ToChar = Item => String.fromCharCode(Item)
+export const convertBinaryToChar = char => String.fromCharCode(char)

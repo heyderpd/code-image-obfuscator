@@ -17,8 +17,8 @@ interface Postion {
   position: number;
 }
 
-export const findMessageHead = (messageFirstChunk: string): Postion => {
-  const match = headPattern.exec(messageFirstChunk)
+export const findMessageHead = (messageChunk: string): Postion => {
+  const match = headPattern.exec(messageChunk)
   if (!match) {
     return null
   }
@@ -31,8 +31,8 @@ export const findMessageHead = (messageFirstChunk: string): Postion => {
   }
 }
 
-export const findMessageTail = (messageNextChunk: string, messageLastChunk: string): Postion => {
-  const match = tailPattern.exec(messageNextChunk + messageLastChunk)
+export const findMessageTail = (messageChunk: string, messageNextChunk: string): Postion => {
+  const match = tailPattern.exec(messageChunk + messageNextChunk)
   if (!match) {
     return null
   }

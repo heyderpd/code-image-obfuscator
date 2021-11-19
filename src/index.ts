@@ -9,5 +9,5 @@ export const Save = (imagePath: string, message: string) => {
 
 export const Load = (imagePath: string) => {
   const canvas = new Canvas(imagePath)
-  LoadMessage(canvas)
+  return LoadMessage(canvas)
 }
