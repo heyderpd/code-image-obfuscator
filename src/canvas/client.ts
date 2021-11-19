@@ -1,5 +1,7 @@
 export const load = (canvasId: string) => {
-  return document.getElementById(canvasId)
+  const originalCanvas = document.getElementById(canvasId)
+  const newCanvas = document.createElement('canvas')
+  return [ originalCanvas, newCanvas ]
 }
 
 export const save = (imagePath: string, canvas: any) => {}

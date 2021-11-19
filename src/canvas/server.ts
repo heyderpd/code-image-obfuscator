@@ -15,15 +15,27 @@ const checkImagePath = pathFile => {
 
 export const load = (imagePath: string) => {
   checkImagePath(imagePath)
-  const img = new Image()
-  img.src = fs.readFileSync(imagePath)
-  return new npmCanvas(img.width, img.height)
+  const originalCanvas = new Image()
+  originalCanvas.src = fs.readFileSync(imagePath)
+  const newCanvas = new npmCanvas(originalCanvas.width, originalCanvas.height)
+  return [ originalCanvas, newCanvas ]
 }
 
-export const save = (imagePath: string, canvas: any) => {
-  checkImagePath(imagePath)
-  const out = fs.createWriteStream(imagePath)
-  const stream = canvas.pngStream()
-  stream.on('data', chunk => out.write(chunk))
-  stream.on('end', _ => console.log('new png created'))
+export const save = async (imagePath: string, canvas: any) => {
+  return new Promise(resolve => {
+    try {
+      checkImagePath(imagePath)
+      const out = fs.createWriteStream(imagePath)
+      console.log('***********1', { out, canvas })
+      const stream = canvas.pngStream()
+      console.log('***********2', { stream })
+      stream.on('data', chunk => out.write(chunk))
+      stream.on('end', _ => {
+        console.log('new png created')
+        resolve('created')
+      })
+    } catch (err) {
+      console.error(err)
+    }
+  })
 }

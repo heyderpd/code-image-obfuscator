@@ -2,12 +2,13 @@ import Canvas from './canvas'
 import { SaveMessage, LoadMessage } from './data'
 
 
-export const Save = (imagePath: string, message: string) => {
+export const Save = async (imagePath: string, message: string, newImagePath: string = null) => {
   const canvas = new Canvas(imagePath)
-  SaveMessage(canvas, message)
+  await SaveMessage(canvas, message)
+  canvas.save(newImagePath)
 }
 
-export const Load = (imagePath: string) => {
+export const Load = async (imagePath: string) => {
   const canvas = new Canvas(imagePath)
   return LoadMessage(canvas)
 }
