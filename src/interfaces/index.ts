@@ -15,3 +15,8 @@ export interface Color {
   B: number;
   A: number;
 }
+
+export interface IteratorResponse {
+  done: boolean;
+  value: any;
+}

@@ -1,9 +1,12 @@
 import { wordLength } from '../config'
 import { PixelPostion } from '../interfaces'
 
-export const PositionToXY = (Position: number, Base: number): PixelPostion => {
-  const X = Position % Base
-  const Y = (Position - X) / Base
+export const PositionToXY = (Position: number, Width: number, Height: number): PixelPostion => {
+  const X = Position % Width
+  const Y = (Position - X) / Width
+  if (Y >= Height) {
+    return null
+  }
   return {
     X,
     Y,

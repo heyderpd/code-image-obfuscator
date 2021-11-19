@@ -1,76 +1,62 @@
-import { colorLength, chunkSize } from '../config'
+import { pixelSize, chunkSize } from '../config'
 import { PositionToXY, IsODD, createFilledZeros } from '../utils'
+import { Iterator } from './helper'
+import { ConvertDataToPixel, ConvertPixelToData } from '../data/data-to-pixel'
 
 
-export const SaveIterator = (canvas: any) => {
-  return {
-    [Symbol.iterator]: function() {
-      this._pixel = 0
-      this._cache = []
-      const savePixel = () => {
-        const position = PositionToXY(this._pixel, canvas.width)
-        const pixel = canvas.getPixel(position)
-        this._cache
-          .map((bitStr, color) => {
-            let value = pixel[color]
-            const bit = bitStr === '1'
-            const odd = IsODD(value)
-            if (odd && !bit) {
-              value -= 1
-            } else if (!odd && bit) {
-              value += 1
-            }
-            pixel[color] = value
-          })
-        canvas.setPixel(position, pixel)
-        this._pixel += 1
-      }
-      return {
-        next: (data: string, flush: boolean = false) => {
-          if (flush) {
-            const needed = colorLength - this._cache.length
-            data = createFilledZeros(needed)
-          }
-          data
-            .split('')
-            .map(bit => {
-              this._cache.push(bit)
-              if (this._cache.length == colorLength) {
-                savePixel()
-                this._cache = []
-              }
-            })
-        }
-      }
+export class CanvasReaderIterator extends Iterator {
+
+  size = pixelSize
+
+  constructor () {
+    super()
+    this._getItem = () => {
     }
   }
+
+  _getItem () {
+    return null
+  }
+
+  _process (item) {
+    return null
+  }
+
 }
 
-export const LoadIterator = (canvas: any) => {
-  return {
-    [Symbol.iterator]: function() {
-      this._pixel = 0
-      const loadPixel = () => {
-        const position = PositionToXY(this._pixel, canvas.width)
-        const pixel = canvas.getPixel(position)
-        this._pixel += 1
-        return pixel
-          .map(color => IsODD(color))
+export class CanvasWriterIterator extends Iterator {
+
+  size = pixelSize
+  index = 0
+  _iterator = null
+
+  constructor (dataIterator: Iterator, canvasWrapper: any) {
+    super()
+    this._iterator = dataIterator.getIterator()
+    this._getItem = () => {
+      const item = this._iterator.next()
+      if (item.done) {
+        // throw new Error('not enough data')
+        this.done = true
+        return null
       }
-      return {
-        next: () => {
-          const value = loadPixel()
-          if (!value) {
-            return {
-              done: true,
-            }
-          }
-          return {
-            value: value,
-            done: false,
-          }
+      return item.value
+    }
+    this._process = (data: boolean[]) => {
+      const position = PositionToXY(this.index++, canvasWrapper.width, canvasWrapper.height)
+      console.log('_process', { canvasWrapper })
+      console.log('_process', { position, data })
+      if (position == null) {
+        if (data.length > 0) {
+          throw new Error('data will be lost')
         }
+        this.done = true
+        return null
       }
+      const pixel = canvasWrapper.getPixel(position)
+      const newPixel = ConvertDataToPixel(pixel, data)
+      canvasWrapper.setPixel(position, newPixel)
     }
   }
+
 }

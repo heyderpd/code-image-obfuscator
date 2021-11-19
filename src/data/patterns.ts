@@ -17,6 +17,10 @@ interface Postion {
   position: number;
 }
 
+export const MountMessage = (messageChunk: string): string => {
+  return head + messageChunk + tail
+}
+
 export const findMessageHead = (messageChunk: string): Postion => {
   const match = headPattern.exec(messageChunk)
   if (!match) {

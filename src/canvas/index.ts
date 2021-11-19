@@ -10,15 +10,19 @@ export class Canvas {
   path = null
   canvas = null
   context = null
+  width = 0
+  height = 0
 
   constructor(imagePath: any){
     const [ originalCanvas, canvas ] = canvasHandler.load(imagePath)
     console.log({ originalCanvas, canvas })
     this.canvas = canvas
+    this.width = canvas.width
+    this.height = canvas.height
     this.context = this.canvas.getContext('2d')
     this.context.drawImage(
       originalCanvas, 0, 0,
-      originalCanvas.width, originalCanvas.height
+      this.width, this.height
     )
   }
 

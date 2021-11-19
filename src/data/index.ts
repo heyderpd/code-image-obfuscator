@@ -1,26 +1,25 @@
-import { head, tail } from '../data/patterns'
-import { Canvas, Message } from '../iterators'
+import { head, tail, MountMessage } from '../data/patterns'
+import { Message, Canvas } from '../iterators'
 
 
 export const SaveMessage = (canvas: any, message: string) => {
-  const messageIterator = Message.LoadIterator(message)
-  const canvasIterator = Canvas.SaveIterator(canvas)[Symbol.iterator]()
-  canvasIterator.next(Message.convertChunkToData(head))
-  for (let chunk of messageIterator) {
-    canvasIterator.next(chunk)
+  const MessageIterator = new Message.MessageWriterIterator(MountMessage(message))
+  const CanvasIterator = new Canvas.CanvasWriterIterator(MessageIterator, canvas)
+  console.log('saving message')
+  for (let item of CanvasIterator) {
+    console.log('.')
   }
-  canvasIterator.next(Message.convertChunkToData(tail))
-  canvasIterator.next('', true)
+  console.log('end')
 }
 
 export const LoadMessage = (canvas: any) => {
-  const canvasIterator = Canvas.LoadIterator(canvas)
-  const messageIterator = Message.SaveIterator()[Symbol.iterator]()
-  for (let data of canvasIterator) {
-    const result = messageIterator.next(data)
-    if (result) {
-      return result.value
-    }
-  }
-  throw new Error('fail on find message')
+  // const canvasIterator = Canvas.LoadIterator(canvas)
+  // const messageIterator = Message.SaveIterator()[Symbol.iterator]()
+  // for (let data of canvasIterator) {
+  //   const result = messageIterator.next(data)
+  //   if (result) {
+  //     return result.value
+  //   }
+  // }
+  // throw new Error('fail on find message')
 }
