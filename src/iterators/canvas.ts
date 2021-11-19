@@ -45,19 +45,9 @@ export class CanvasWriterIterator extends Iterator {
     this._canvasWrapper = canvasWrapper
   }
 
-  // getItem () {
-  //   const item = this._iterator.next()
-  //   if (item.done) {
-  //     // throw new Error('not enough data')
-  //     this.done = true
-  //     return null
-  //   }
-  //   return item.value
-  // }
-
   process (data: boolean[]) {
     const position = PositionToXY(this._index++, this._canvasWrapper.width, this._canvasWrapper.height)
-    if (position == null) {
+    if (position == null || data.length == 0) {
       if (data.length > 0) {
         throw new Error('data will be lost')
       }

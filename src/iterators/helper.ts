@@ -39,7 +39,7 @@ export class Iterator {
       return null
     }
     if (Array.isArray(item.value)) {
-      this._buffer = this._buffer.concat(this._buffer, item.value)
+      this._buffer = this._buffer.concat(item.value)
     } else {
       this._buffer.push(item.value)
     }
