@@ -1,5 +1,5 @@
 
-import { PixelPostion, Color } from '../interfaces'
+import { PixelPostion, Pixel, CastPixel } from '../interfaces'
 
 const canvasHandler = process.env['WEB']
   ? require('./client')
@@ -26,13 +26,14 @@ export class Canvas {
     )
   }
 
-  setPixel (Pixel: PixelPostion, C: Color) {
-    this.context.fillStyle = `rgba(${C.R},${C.G},${C.B},${C.A})`
-    this.context.fillRect(Pixel.X, Pixel.Y, 1, 1)
+  setPixel (positon: PixelPostion, pixel: Pixel) {
+    this.context.fillStyle = `rgba(${pixel.R},${pixel.G},${pixel.B},${pixel.A})`
+    this.context.fillRect(positon.X, positon.Y, 1, 1)
   }
 
   getPixel (Pixel: PixelPostion) {
-    return this.context.getImageData(Pixel.X, Pixel.Y, 1, 1).data
+    const pixel = this.context.getImageData(Pixel.X, Pixel.Y, 1, 1).data
+    return CastPixel(pixel)
   }
 
   async save (imagePath: string) {

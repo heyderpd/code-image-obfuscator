@@ -1,7 +1,10 @@
 import { IsODD } from '../utils'
+import { Pixel, CastPixel } from '../interfaces'
+import { messageVisible } from '../config'
 
 
-export const ConvertDataToPixel = (pixel: number[], data: boolean[]) => {
+export const ConvertDataToPixel = (P: Pixel, data: boolean[]) => {
+  const pixel = P.Array
   data.map((bit, color) => {
     let value = pixel[color]
     const odd = IsODD(value)
@@ -10,9 +13,16 @@ export const ConvertDataToPixel = (pixel: number[], data: boolean[]) => {
     } else if (!odd && bit) {
       value += 1
     }
+    if (messageVisible) {
+      if (bit) {
+        value = 99
+      } else {
+        value = 44
+      }
+    }
     pixel[color] = value
   })
-  return pixel
+  return CastPixel(pixel)
 }
 
 export const ConvertPixelToData = (pixel: number[]) => {

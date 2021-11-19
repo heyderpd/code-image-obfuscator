@@ -9,14 +9,27 @@ export interface PixelPostion {
   Y: number;
 }
 
-export interface Color {
+export interface Pixel {
   R: number;
   G: number;
   B: number;
   A: number;
+  Array: number[];
 }
 
 export interface IteratorResponse {
   done: boolean;
   value: any;
+}
+
+export const CastPixel = function (Array: number[]) {
+  const [R, G, B, A] = Array
+  const P: Pixel = {
+    R,
+    G,
+    B,
+    A,
+    Array,
+  }
+  return P
 }

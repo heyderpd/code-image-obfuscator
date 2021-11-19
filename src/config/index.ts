@@ -12,6 +12,7 @@ export const pixelSize: number = 3
 
 export const chunkSize: number = 64 
 
+export const messageVisible: boolean = false 
 
 // export const colorLength: number = 3
 
