@@ -1,3 +1,4 @@
+import { wordLength } from './config'
 
 export const PtoXY = (P, B) => {
   const x = P %B
@@ -21,6 +22,14 @@ export const Process = (Work, List) => {
   return List
 }
 
-export const convertCharToBinary = (char = '\u0000') => char.charCodeAt(0).toString(2)
+const filledZeros = new Array(wordLength).fill(0).join('')
+
+export const convertCharToBinary = (char = '\u0000') => {
+  return (
+    wordLength + char
+      .charCodeAt(0)
+      .toString(2)
+  ).substr(-wordLength)
+}
 
 export const ToChar = Item => String.fromCharCode(Item)
