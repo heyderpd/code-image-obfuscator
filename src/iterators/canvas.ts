@@ -1,5 +1,5 @@
 import { colorLength } from '../config'
-import { PositionToXY, IsODD } from '../utils'
+import { PositionToXY, IsODD, createFilledZeros } from '../utils'
 
 
 export const SaveIterator = (canvas: any) => {
@@ -25,7 +25,11 @@ export const SaveIterator = (canvas: any) => {
         canvas.setPixel(x, y, pixel)
       }
       return {
-        next: (data: string) => {
+        next: (data: string, flush: boolean = false) => {
+          if (flush) {
+            const needed = colorLength - this._cache.length
+            data = createFilledZeros(needed)
+          }
           data
             .split('')
             .map(bit => {

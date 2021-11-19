@@ -10,4 +10,5 @@ export const SaveMessage = (canvas: any, message: string) => {
     canvasIterator.next(chunk)
   }
   canvasIterator.next(Message.convertChunkToData(tail))
+  canvasIterator.next('', true)
 }

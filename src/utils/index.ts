@@ -28,7 +28,9 @@ export const Process = (Work, List) => {
   return List
 }
 
-const filledZeros = new Array(wordLength).fill(0).join('')
+export const createFilledZeros = length => new Array(length).fill(0).join('')
+
+const filledZeros = createFilledZeros(wordLength)
 
 export const convertCharToBinary = (char = '\u0000') => {
   return (
