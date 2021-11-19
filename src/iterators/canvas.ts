@@ -46,7 +46,7 @@ export const SaveIterator = (canvas: any) => {
   }
 }
 
-export const loadIterator = (canvas: any) => {
+export const LoadIterator = (canvas: any) => {
   return {
     [Symbol.iterator]: function() {
       this._pixel = 0

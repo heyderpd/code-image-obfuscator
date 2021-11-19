@@ -34,7 +34,7 @@ export const LoadIterator = (message: string) => {
   }
 }
 
-export const loadIterator = (canvas: any) => {
+export const SaveIterator = () => {
   return {
     [Symbol.iterator]: function() {
       this._initializing = true
