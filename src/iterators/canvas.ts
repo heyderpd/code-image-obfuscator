@@ -1,5 +1,5 @@
 import { colorLength } from '../config'
-import { PositionToXY, IsODD } from '../math'
+import { PositionToXY, IsODD } from '../utils/math'
 
 
 export const SaveIterator = (canvas: any) => {
