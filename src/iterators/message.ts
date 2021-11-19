@@ -12,7 +12,7 @@ export function convertChunkToData(chunk: string){
 export const LoadIterator = (message: string) => {
   return {
     [Symbol.iterator]: function() {
-      this._index  = 0
+      this._index = 0
       return {
         next: () => {
           if (message.length < this._index + 1) {
