@@ -29,6 +29,7 @@ export class CanvasWriterIterator extends Iterator {
   size = pixelSize
   index = 0
   _iterator = null
+  _cache = []
 
   constructor (dataIterator: Iterator, canvasWrapper: any) {
     super()
@@ -44,8 +45,6 @@ export class CanvasWriterIterator extends Iterator {
     }
     this._process = (data: boolean[]) => {
       const position = PositionToXY(this.index++, canvasWrapper.width, canvasWrapper.height)
-      console.log('_process', { canvasWrapper })
-      console.log('_process', { position, data })
       if (position == null) {
         if (data.length > 0) {
           throw new Error('data will be lost')

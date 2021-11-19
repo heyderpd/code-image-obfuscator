@@ -35,12 +35,18 @@ export const createFilledZeros = length => new Array(length).fill(0).join('')
 
 const filledZeros = createFilledZeros(wordLength)
 
-export const convertCharToBinary = (char = '\u0000') => {
+const convertCharToBinary = (char = '\u0000') => {
   return (
     filledZeros + char
       .charCodeAt(0)
       .toString(2)
   ).substr(-wordLength)
+}
+
+export const convertCharToBinaryArray = char => {
+  return convertCharToBinary(char)
+    .split('')
+    .map(bit => bit === '1')
 }
 
 export const convertBinaryToChar = char => String.fromCharCode(char)

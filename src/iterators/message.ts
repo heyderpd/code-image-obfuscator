@@ -1,5 +1,5 @@
 import { chunkSize } from '../config'
-import { convertCharToBinary, convertBinaryToChar } from '../utils'
+import { convertCharToBinaryArray, convertBinaryToChar } from '../utils'
 import { findMessageHead, findMessageTail } from '../data/patterns'
 import { Iterator } from './helper'
 import { IteratorResponse } from '../interfaces'
@@ -28,6 +28,7 @@ export class MessageReaderIterator extends Iterator {
 export class MessageWriterIterator extends Iterator {
 
   size = chunkSize
+  flat = true
   index = 0
 
   constructor (message: string) {
@@ -41,9 +42,8 @@ export class MessageWriterIterator extends Iterator {
     }
   }
 
-  _process (item) {
-    console.log({ item })
-    return convertCharToBinary(item)
+  _process (chunk) {
+    return Array().concat(...chunk.map(convertCharToBinaryArray))
   }
 
 }

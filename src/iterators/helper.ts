@@ -15,24 +15,35 @@ export class Iterator {
   }
 
   _pushAndFlush () {
-    const item = this._getItem()
-    if (item != null) {
-      this.buffer.push(item)
+    if (this.buffer.length >= this.size) {
+      return this.flush()
     }
-    if (this.buffer.length == 0 && this.buffer.length < this.size) {
-      return null
+    const item = this._getItem()
+    if (item == null) {
+      return this.flush()
+    }
+    if (Array.isArray(item)) {
+      this.buffer = this.buffer.concat(this.buffer, item)
+    } else {
+      this.buffer.push(item)
     }
     return this.flush()
   }
 
-  _process (item) {
-    return item
+  _process (chunk) {
+    return chunk
   }
 
   flush () {
-    const transformed = this.buffer.map(this._process)
-    this.buffer = []
-    return transformed
+    let chunk = null
+    if (this.buffer.length < this.size) {
+      chunk = this.buffer
+      this.buffer = []
+    } else {
+      chunk = this.buffer.slice(0, this.size)
+      this.buffer = this.buffer.slice(this.size)
+    }
+    return this._process(chunk)
   }
 
   [Symbol.iterator] = () => {

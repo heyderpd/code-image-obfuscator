@@ -2,7 +2,6 @@ import { IsODD } from '../utils'
 
 
 export const ConvertDataToPixel = (pixel: number[], data: boolean[]) => {
-  console.log('ConvertDataToPixel', { pixel, data })
   data.map((bit, color) => {
     let value = pixel[color]
     const odd = IsODD(value)
