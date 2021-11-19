@@ -21,6 +21,6 @@ export const Process = (Work, List) => {
   return List
 }
 
-export const ToCode = (Item = '\u0000') => Item.charCodeAt()
+export const convertCharToBinary = (char = '\u0000') => char.charCodeAt(0).toString(2)
 
 export const ToChar = Item => String.fromCharCode(Item)
