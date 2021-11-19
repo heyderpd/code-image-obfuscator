@@ -1,4 +1,4 @@
-import { colorLength } from '../config'
+import { colorLength, chunkSize } from '../config'
 import { PositionToXY, IsODD, createFilledZeros } from '../utils'
 
 
@@ -12,7 +12,7 @@ export const SaveIterator = (canvas: any) => {
         const pixel = canvas.getPixel(x, y)
         this._cache
           .map((bitStr, color) => {
-            let value = pixel.getColor(color)
+            let value = pixel[color]
             const bit = bitStr === '1'
             const odd = IsODD(value)
             if (odd && !bit) {
@@ -23,6 +23,7 @@ export const SaveIterator = (canvas: any) => {
             pixel.setColor(color, value)
           })
         canvas.setPixel(x, y, pixel)
+        this._pixel += 1
       }
       return {
         next: (data: string, flush: boolean = false) => {
@@ -39,6 +40,35 @@ export const SaveIterator = (canvas: any) => {
                 this._cache = []
               }
             })
+        }
+      }
+    }
+  }
+}
+
+export const loadIterator = (canvas: any) => {
+  return {
+    [Symbol.iterator]: function() {
+      this._pixel = 0
+      const loadPixel = () => {
+        const { x, y } = PositionToXY(this._pixel, canvas.width)
+        const pixel = canvas.getPixel(x, y)
+        this._pixel += 1
+        return pixel
+          .map(color => IsODD(color))
+      }
+      return {
+        next: () => {
+          const value = loadPixel()
+          if (!value) {
+            return {
+              done: true,
+            }
+          }
+          return {
+            value: value,
+            done: false,
+          }
         }
       }
     }
