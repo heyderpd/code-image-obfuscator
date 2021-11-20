@@ -13,7 +13,7 @@ export class Canvas {
   width = 0
   height = 0
 
-  constructor(imagePath: any){
+  constructor (imagePath: any) {
     const [ originalCanvas, canvas ] = canvasHandler.load(imagePath)
     this.canvas = canvas
     this.width = canvas.width

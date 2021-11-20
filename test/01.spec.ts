@@ -7,14 +7,15 @@ const data = fs.readFileSync('./README.md', 'utf8')
 const testInjection = async fileName => {
   const originalFile = `./test/before/${fileName}`
   const newFile = `./test/after/${fileName}`
-  // await Save(originalFile, data, newFile)
+  await Save(originalFile, data, newFile)
   return await Load(newFile)
 }
 
 describe('basic test', function() {
+
   it('A.png', async () => {
     const dataAfter = await testInjection('ia.png')
-    assert.deepEqual(
+    assert.strictEqual(
       data,
       dataAfter
     )
@@ -27,4 +28,5 @@ describe('basic test', function() {
       dataAfter
     )
   })
+  
 })

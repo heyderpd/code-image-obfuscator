@@ -5,7 +5,7 @@ import { SaveMessage, LoadMessage } from './data'
 export const Save = async (imagePath: string, message: string, newImagePath: string = null) => {
   const canvasWrapper = new Canvas(imagePath)
   await SaveMessage(canvasWrapper, message)
-  canvasWrapper.save(newImagePath)
+  await canvasWrapper.save(newImagePath)
 }
 
 export const Load = async (imagePath: string) => {

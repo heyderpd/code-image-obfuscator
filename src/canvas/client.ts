@@ -4,4 +4,4 @@ export const load = (canvasId: string) => {
   return [ originalCanvas, newCanvas ]
 }
 
-export const save = (imagePath: string, canvas: any) => {}
+export const save = async (imagePath: string, canvas: any) => {}

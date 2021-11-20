@@ -14,6 +14,7 @@ const checkImagePath = pathFile => {
 }
 
 export const load = (imagePath: string) => {
+  console.log('loading png')
   checkImagePath(imagePath)
   const originalCanvas = new Image()
   originalCanvas.src = fs.readFileSync(imagePath)
@@ -24,14 +25,12 @@ export const load = (imagePath: string) => {
 export const save = async (imagePath: string, canvas: any) => {
   return new Promise(resolve => {
     try {
+      setTimeout(resolve, 300)
       checkImagePath(imagePath)
       const out = fs.createWriteStream(imagePath)
       const stream = canvas.pngStream()
-      stream.on('data', chunk => out.write(chunk))
-      stream.on('end', _ => {
-        console.log('new png created')
-        resolve('created')
-      })
+      stream.on('end', _ => console.log('stream-> new png created'))
+      stream.pipe(out)
     } catch (err) {
       console.error(err)
     }
