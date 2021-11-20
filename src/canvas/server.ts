@@ -25,7 +25,7 @@ export const load = (imagePath: string) => {
 export const save = async (imagePath: string, canvas: any) => {
   return new Promise(resolve => {
     try {
-      setTimeout(resolve, 300)
+      setTimeout(resolve, 300) //TODO: remove this and close out gracefully
       checkImagePath(imagePath)
       const out = fs.createWriteStream(imagePath)
       const stream = canvas.pngStream()
