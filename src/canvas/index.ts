@@ -1,9 +1,7 @@
 
 import { PixelPostion, Pixel, CastPixel } from '../interfaces'
+import * as canvasHandler from './serverHandler'
 
-const canvasHandler = process.env['WEB']
-  ? require('./client')
-  : require('./server')
 
 export class Canvas {
 
