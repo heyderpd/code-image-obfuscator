@@ -45,10 +45,10 @@ bundleFoundIn => 'code-image-obfuscator/dist/cio.bundle.js'
 const before = 'some-data'
 
 // create new img with data
-window.cio.Save('./photo.png', before, './new-photo.png')
+window.cio.Save('element_id_of_img', before, 'element_id_of_canvas')
 
 /* to load data from img */
-const after = await window.cio.Load('./new-photo.png')
+const after = await window.cio.Load('element_id_of_canvas')
 
 /* compare data after recovery */
 console.log(before == after)
