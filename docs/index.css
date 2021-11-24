@@ -15,3 +15,8 @@ canvas {
 p {
     display: table-cell;
 }
+
+div {
+    display: table-caption;
+	margin: 1em;
+}
