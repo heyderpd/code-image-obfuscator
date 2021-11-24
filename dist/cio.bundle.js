@@ -204,7 +204,7 @@ var cio = (function (exports) {
     var convertBinaryToChar = function (char) { return String.fromCharCode(parseInt(char.join(''), 2)); };
 
     var name = "code-image-obfuscator";
-    var version = "2.0.1";
+    var version = "3.0.0";
 
     var project = "".concat(name, "@").concat(version);
     var head = "{".concat(project, "}>>>");
@@ -493,7 +493,6 @@ var cio = (function (exports) {
         var e_1, _a;
         var MessageIterator = new MessageWriterIterator(message);
         var CanvasIterator = new CanvasWriterIterator(MessageIterator, canvas);
-        console.log('saving message');
         try {
             for (var CanvasIterator_1 = __values(CanvasIterator), CanvasIterator_1_1 = CanvasIterator_1.next(); !CanvasIterator_1_1.done; CanvasIterator_1_1 = CanvasIterator_1.next()) {
                 var item = CanvasIterator_1_1.value;
@@ -507,13 +506,11 @@ var cio = (function (exports) {
             }
             finally { if (e_1) throw e_1.error; }
         }
-        console.log('end');
     };
     var LoadMessage = function (canvas) {
         var e_2, _a;
         var CanvasIterator = new CanvasReaderIterator(canvas);
         var MessageIterator = new MessageReaderIterator(CanvasIterator);
-        console.log('loading message');
         try {
             for (var MessageIterator_1 = __values(MessageIterator), MessageIterator_1_1 = MessageIterator_1.next(); !MessageIterator_1_1.done; MessageIterator_1_1 = MessageIterator_1.next()) {
                 var item = MessageIterator_1_1.value;
@@ -527,7 +524,6 @@ var cio = (function (exports) {
             }
             finally { if (e_2) throw e_2.error; }
         }
-        console.log('end');
         return MessageIterator.message;
     };
 
