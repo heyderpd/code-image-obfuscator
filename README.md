@@ -1,22 +1,19 @@
-# CODE IMAGE OBFUSCATOR
+## CODE IMAGE OBFUSCATOR
 
-## Plugin that converts text to image and reverte.
-## Please use it responsibly! Do not use it for an illegal purpose.
+This library lets you store any data inside any image and retrieve it later.
+It can be a text, a script or another image.
+Please use it responsibly! Do not use it for an illegal purpose.
 
-## Motivation
+### Motivation
 Attempt to hide a javascript file during transmission.
 
-## Attention
+### Attention
 Support only png without transparency. Because the transparency destroy the data
 
-## Future / Features
-* [DONE] Use a source image and merge changing the least original.
-* Hide the original data using a password.
-
-## Thanks for [npm~lucasmreis](https://www.npmjs.com/~lucasmreis)
+### Thanks for [npm~lucasmreis](https://www.npmjs.com/~lucasmreis)
 
 ## First Steps
-* install canvas see [npm-canvas](https://www.npmjs.com/package/canvas)
+* for install canvas see [npm-canvas](https://www.npmjs.com/package/canvas)
 * npm install code-image-obfuscator
 
 ## Example [nodejs]:
