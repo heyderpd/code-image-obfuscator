@@ -1,8 +1,7 @@
 import * as pkg from '../../package.json'
-import { messageChunkSize } from '../config'
+import { version, messageChunkSize } from '../config'
 
 
-const version = 'v2'
 const project = `${pkg.name}@${version}`
 export const head = `{${project}}>>>`
 export const tail = `<<<{${project}}`

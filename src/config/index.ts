@@ -1,4 +1,6 @@
 
+export const version: string = 'v2'
+
 export const wordLength: number = 8
 
 export const pixelSize: number = 3
