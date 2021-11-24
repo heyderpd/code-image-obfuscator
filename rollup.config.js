@@ -11,7 +11,7 @@ import uglify from 'rollup-plugin-uglify'
 export default {
   input: 'src/index.ts',
   output: {
-    file: 'test/code-image-obfuscator.bundle.js',
+    file: 'dist/cio.bundle.js',
     format: 'iife',
     name: 'cio',
   },
