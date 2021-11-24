@@ -22,46 +22,34 @@ Support only png without transparency. Because the transparency destroy the data
 ## Example [nodejs]:
 ```javascript
 import fs from 'fs'
-import { load, save, injectData, recoveryData } from 'code-image-obfuscator'
-// SAVE
-{
-  // data before merge with imagem
-  let before = fs.readFileSync('README.md', 'utf8')
+import { Save, Load } from 'code-image-obfuscator'
 
-  // load img to canvas
-  load('./photo.png')
+// loading data example
+const before = fs.readFileSync('README.md', 'utf8')
 
-  // merged data and image
-  injectData(before)
+// create new img with data
+await Save('./photo.png', before, './new-photo.png')
 
-  // save new merged image
-  save('./photo.png')
-}
+/* to load data from img */
+const after = await Load('./new-photo.png')
 
-// LOAD
-{
-  // load new image with data merged
-  load('./photo.png')
-
-  // data recovery from imagem
-  let after = recoveryData()
-}
+/* compare data after recovery */
+console.log(before == after)
 ```
 
 ## Example [browser]:
 ```javascript
-bundle => 'dist/code-image-obfuscator.bundle.js'
+bundleFoundIn => 'code-image-obfuscator/dist/cio.bundle.js'
 
-function convert(){
-	cio.data.set({
-		text: message,
-		imgId: "id of image",
-    canvasId: "id of canvas"
-  })
-}
+// loading data example
+const before = 'some-data'
 
-function revert(){
-	cio.load.canvas("id of canvas")
-	return cio.data.get()
-}
+// create new img with data
+window.cio.Save('./photo.png', before, './new-photo.png')
+
+/* to load data from img */
+const after = await window.cio.Load('./new-photo.png')
+
+/* compare data after recovery */
+console.log(before == after)
 ```
