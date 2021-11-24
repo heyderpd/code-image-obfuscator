@@ -7,16 +7,27 @@ textarea {
 }
 
 canvas {
-	/*width: 20em;*/
-	height: 200px;
 	background-color: black;
 }
 
-p {
-    display: table-cell;
+body div {
+	display: flex;
+	width: 100%;
+	height: 100%;
+	margin: 10px;
 }
 
-div {
-    display: table-caption;
-	margin: 1em;
+.col {
+    flex-direction: column;
+	width: 50%;
+}
+
+.col > * {
+	width: 100%;
+	height: 100%;
+}
+
+.image {
+	width: 400px;
+	height: 200px;
 }

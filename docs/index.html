@@ -7,26 +7,30 @@
 </head>
 
 <body>
-  <div>
-    This library lets you store any data inside any image and retrieve it later. It can be a text, a script or another image.
+  <div class="line col">
+    <span>
+      This library lets you store any data inside any image and retrieve it later. It can be a text, a script or another image.
+    </span>
     <a href="https://www.npmjs.com/package/code-image-obfuscator">npm-package</a>
   </div>
-  <p>
-    <span>image before the data is merged</span>
-    <img id="ideia" src="./ideia.png" height="200">
-    <textarea class="before" rows="6" cols="10">
+  <div class="line">
+    <div class="col">
+      <span>image before the data is merged</span>
+      <img id="ideia" class="image" src="./ideia.png">
+      <textarea class="before" rows="6" cols="10">
 function hello(name = 'Mario') {
   alert('Hello '+name+'!');
 }
-    </textarea>
-    <button class="convert" onclick="convert()">merge data</button>
-  </p>
-  <p>
-    <span>image after the data is merged</span>
-    <canvas style="height:200px;" class="none" id="canvas"></canvas>
-    <textarea class="after" rows="6" cols="10"></textarea>
-    <button class="revert" onclick="revert()">recovery data</button>
-  </p>
+      </textarea>
+      <button class="convert" onclick="convert()">merge data</button>
+    </div>
+    <div class="col">
+      <span>image after the data is merged</span>
+      <canvas id="canvas" class="image"></canvas>
+      <textarea class="after" rows="6" cols="10"></textarea>
+      <button class="revert" onclick="revert()">recovery data</button>
+    </div>
+  </div>
 </body>
 
 </html>
