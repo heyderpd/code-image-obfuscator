@@ -1,23 +1,20 @@
 
-let after, before, cio
+const originalImage = "ideia"
+const newImage = "canvas"
 
-function initialize(){
+let after, before
+
+function initialize () {
 	after = document.getElementsByClassName('after')[0]
 	before = document.getElementsByClassName('before')[0]
-	cio = window.module.cio
 }
 
-function convert(){
-	cio.data.set({
-		text: before.value,
-		imgId: "ideia",
-		canvasId: "canvasImg"
-	})
+async function convert () {
+	window.cio.Save(originalImage, before.value, newImage)
 }
 
-function revert(){
-	cio.load.canvas("canvasImg")
-	after.value = cio.data.get()
+async function revert () {
+	after.value = await window.cio.Load(newImage)
 }
 
 document.onreadystatechange = function () {
