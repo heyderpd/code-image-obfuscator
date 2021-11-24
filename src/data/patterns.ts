@@ -2,7 +2,8 @@ import * as pkg from '../../package.json'
 import { messageChunkSize } from '../config'
 
 
-const project = `${pkg.name}@${pkg.version}`
+const version = 'v2'
+const project = `${pkg.name}@${version}`
 export const head = `{${project}}>>>`
 export const tail = `<<<{${project}}`
 const headPattern = new RegExp(`^(${head})`)
