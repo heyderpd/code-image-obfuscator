@@ -1,0 +1,28 @@
+<html>
+
+<head>
+  <script type="text/javascript" language="javascript" src="./cio.bundle.js"></script>
+  <script type="text/javascript" language="javascript" src="./index.js"></script>
+  <link rel="stylesheet" href="./index.css" />
+</head>
+
+<body>
+  <p>
+    <span>image before the data is merged</span>
+    <img id="ideia" src="./ideia.png" height="200">
+    <textarea class="before" rows="6" cols="10">
+function hello(name = 'Mario') {
+  alert('Hello '+name+'!');
+}
+    </textarea>
+    <button class="convert" onclick="convert()">merge data</button>
+  </p>
+  <p>
+    <span>image after the data is merged</span>
+    <canvas style="height:200px;" class="none" id="canvas"></canvas>
+    <textarea class="after" rows="6" cols="10"></textarea>
+    <button class="revert" onclick="revert()">recovery data</button>
+  </p>
+</body>
+
+</html>

@@ -11,7 +11,7 @@ import uglify from 'rollup-plugin-uglify'
 export default {
   input: 'src/index.ts',
   output: {
-    file: 'dist/cio.bundle.js',
+    file: 'docs/cio.bundle.js',
     format: 'iife',
     name: 'cio',
   },

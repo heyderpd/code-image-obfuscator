@@ -12,6 +12,6 @@ canvas {
 	background-color: black;
 }
 
-div {
-	display: table-cell;
+p {
+    display: table-cell;
 }
