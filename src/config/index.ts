@@ -9,4 +9,6 @@ export const pixelChunkSize: number = 4
 
 export const messageChunkSize: number = 32
 
-export const messageVisible: boolean = false 
+export let messageVisible: boolean = false 
+
+export const SetMessageVisible = value => messageVisible = value
