@@ -133,18 +133,12 @@ var cio = (function (exports) {
     };
 
     var Canvas = /** @class */ (function () {
-        function Canvas(imagePath) {
+        function Canvas() {
             this.path = null;
             this.canvas = null;
             this.context = null;
             this.width = 0;
             this.height = 0;
-            var _a = __read(load(imagePath), 2), originalCanvas = _a[0], canvas = _a[1];
-            this.canvas = canvas;
-            this.width = canvas.width;
-            this.height = canvas.height;
-            this.context = this.canvas.getContext('2d');
-            this.context.drawImage(originalCanvas, 0, 0, this.width, this.height);
         }
         Canvas.prototype.setPixel = function (positon, pixel) {
             this.context.fillStyle = "rgba(".concat(pixel.R, ",").concat(pixel.G, ",").concat(pixel.B, ",").concat(pixel.A, ")");
@@ -153,6 +147,24 @@ var cio = (function (exports) {
         Canvas.prototype.getPixel = function (Pixel) {
             var pixel = this.context.getImageData(Pixel.X, Pixel.Y, 1, 1).data;
             return CastPixel(pixel);
+        };
+        Canvas.prototype.load = function (imagePath) {
+            return __awaiter(this, void 0, void 0, function () {
+                var _a, originalCanvas, canvas;
+                return __generator(this, function (_b) {
+                    switch (_b.label) {
+                        case 0: return [4 /*yield*/, load(imagePath)];
+                        case 1:
+                            _a = __read.apply(void 0, [_b.sent(), 2]), originalCanvas = _a[0], canvas = _a[1];
+                            this.canvas = canvas;
+                            this.width = canvas.width;
+                            this.height = canvas.height;
+                            this.context = this.canvas.getContext('2d');
+                            this.context.drawImage(originalCanvas, 0, 0, this.width, this.height);
+                            return [2 /*return*/];
+                    }
+                });
+            });
         };
         Canvas.prototype.save = function (imagePath) {
             return __awaiter(this, void 0, void 0, function () {
@@ -169,10 +181,13 @@ var cio = (function (exports) {
         return Canvas;
     }());
 
+    var version = 'v2';
     var wordLength = 8;
     var pixelSize = 3;
     var pixelChunkSize = 4;
     var messageChunkSize = 32;
+    var messageVisible = false;
+    var SetMessageVisible = function (value) { return messageVisible = value; };
 
     var PositionToXY = function (Position, Width, Height) {
         var X = Position % Width;
@@ -204,7 +219,6 @@ var cio = (function (exports) {
     var convertBinaryToChar = function (char) { return String.fromCharCode(parseInt(char.join(''), 2)); };
 
     var name = "code-image-obfuscator";
-    var version = "3.0.0";
 
     var project = "".concat(name, "@").concat(version);
     var head = "{".concat(project, "}>>>");
@@ -368,7 +382,6 @@ var cio = (function (exports) {
                     throw new Error('message not found');
                 }
                 this._lastChunk = chunk.slice(start.position);
-                this.message = this._lastChunk;
                 this._findingHead = false;
                 return;
             }
@@ -423,6 +436,14 @@ var cio = (function (exports) {
             }
             else if (!odd && bit) {
                 value += 1;
+            }
+            if (messageVisible) {
+                if (bit) {
+                    value = 99;
+                }
+                else {
+                    value = 44;
+                }
             }
             pixel[color] = value;
         });
@@ -556,13 +577,16 @@ var cio = (function (exports) {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        canvasWrapper = new Canvas(imagePath);
-                        checkCanvasSuportMessage(canvasWrapper.width, canvasWrapper.height, message.length);
-                        return [4 /*yield*/, SaveMessage(canvasWrapper, message)];
+                        canvasWrapper = new Canvas();
+                        return [4 /*yield*/, canvasWrapper.load(imagePath)];
                     case 1:
                         _a.sent();
-                        return [4 /*yield*/, canvasWrapper.save(newImagePath)];
+                        checkCanvasSuportMessage(canvasWrapper.width, canvasWrapper.height, message.length);
+                        return [4 /*yield*/, SaveMessage(canvasWrapper, message)];
                     case 2:
+                        _a.sent();
+                        return [4 /*yield*/, canvasWrapper.save(newImagePath)];
+                    case 3:
                         _a.sent();
                         return [2 /*return*/];
                 }
@@ -570,15 +594,22 @@ var cio = (function (exports) {
         });
     };
     var Load = function (imagePath) { return __awaiter(void 0, void 0, void 0, function () {
-        var canvas;
+        var canvasWrapper;
         return __generator(this, function (_a) {
-            canvas = new Canvas(imagePath);
-            return [2 /*return*/, LoadMessage(canvas)];
+            switch (_a.label) {
+                case 0:
+                    canvasWrapper = new Canvas();
+                    return [4 /*yield*/, canvasWrapper.load(imagePath)];
+                case 1:
+                    _a.sent();
+                    return [2 /*return*/, LoadMessage(canvasWrapper)];
+            }
         });
     }); };
 
     exports.Load = Load;
     exports.Save = Save;
+    exports.SetMessageVisible = SetMessageVisible;
 
     Object.defineProperty(exports, '__esModule', { value: true });
 
