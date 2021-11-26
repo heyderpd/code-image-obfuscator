@@ -1,6 +1,5 @@
 import * as fs from 'fs'
-import * as npmCanvas from 'canvas'
-const Image = npmCanvas.Image
+import { createCanvas, loadImage } from 'canvas'
 
 
 const checkImagePath = pathFile => {
@@ -13,12 +12,11 @@ const checkImagePath = pathFile => {
   throw new Error(`invalid path=${pathFile}`)
 }
 
-export const load = (imagePath: string) => {
+export const load = async (imagePath: string) => {
   console.log('loading png')
   checkImagePath(imagePath)
-  const originalCanvas = new Image()
-  originalCanvas.src = fs.readFileSync(imagePath)
-  const newCanvas = new npmCanvas(originalCanvas.width, originalCanvas.height)
+  const originalCanvas = await loadImage(imagePath)
+  const newCanvas = createCanvas(originalCanvas.width, originalCanvas.height)
   return [ originalCanvas, newCanvas ]
 }
 
