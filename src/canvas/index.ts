@@ -11,16 +11,7 @@ export class Canvas {
   width = 0
   height = 0
 
-  constructor (imagePath: any) {
-    const [ originalCanvas, canvas ] = canvasHandler.load(imagePath)
-    this.canvas = canvas
-    this.width = canvas.width
-    this.height = canvas.height
-    this.context = this.canvas.getContext('2d')
-    this.context.drawImage(
-      originalCanvas, 0, 0,
-      this.width, this.height
-    )
+  constructor () {
   }
 
   setPixel (positon: PixelPostion, pixel: Pixel) {
@@ -31,6 +22,18 @@ export class Canvas {
   getPixel (Pixel: PixelPostion) {
     const pixel = this.context.getImageData(Pixel.X, Pixel.Y, 1, 1).data
     return CastPixel(pixel)
+  }
+
+  async load (imagePath: string) {
+    const [ originalCanvas, canvas ] = await canvasHandler.load(imagePath)
+    this.canvas = canvas
+    this.width = canvas.width
+    this.height = canvas.height
+    this.context = this.canvas.getContext('2d')
+    this.context.drawImage(
+      originalCanvas, 0, 0,
+      this.width, this.height
+    )
   }
 
   async save (imagePath: string) {
