@@ -45,7 +45,6 @@ export class MessageReaderIterator extends Iterator {
         throw new Error('message not found')
       }
       this._lastChunk = chunk.slice(start.position)
-      this.message = this._lastChunk
       this._findingHead = false
       return
     }
